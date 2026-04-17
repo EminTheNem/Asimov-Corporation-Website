@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>ASIMOV CORPORATION | Complete Industrial Ecosystem — Robotics · Prosthetics · Gadgets · Research Infrastructure</title>
+    <link rel="icon" type="image/png" href="https://i.postimg.cc/Qt7rBjzL/official-Asimov-logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --asimov-red: #e31b23;
+            --stark-white: #f5f5f5;
+            --void-black: #050505;
+            --charcoal-raw: #0c0c0c;
+            --industrial-grey: #1e1e1e;
+            --concrete: #2a2a2a;
+            --steel-edge: #3a3a3a;
+            --brutal-shadow: 8px 8px 0px rgba(227, 27, 35, 0.25);
+            --sharp-border: 3px solid var(--asimov-red);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--void-black);
+            color: #cdcdcd;
+            line-height: 1.4;
+            overflow-x: hidden;
+        }
+
+        .brutal-grain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -2;
+            background-image: repeating-linear-gradient(45deg, rgba(227,27,35,0.015) 0px, rgba(227,27,35,0.015) 2px, transparent 2px, transparent 8px);
+        }
+
+        .hard-scan {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.08) 0px, rgba(0,0,0,0.08) 1px, transparent 1px, transparent 4px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 3rem;
+            background: rgba(5, 5, 5, 0.98);
+            border-bottom: var(--sharp-border);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.1s linear;
+        }
+
+        .logo-hyper { display: flex; align-items: center; gap: 1rem; }
+        .logo-img { height: 44px; width: auto; filter: brightness(0) invert(1) drop-shadow(0 0 3px var(--asimov-red)); }
+        .corp-name { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.5px; background: linear-gradient(135deg, #fff 60%, var(--asimov-red) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; text-transform: uppercase; }
+        .nav-brutal { display: flex; gap: 1.8rem; flex-wrap: wrap; }
+        .nav-brutal a { color: #e0e0e0; text-decoration: none; font-weight: 700; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.5px; padding: 0.4rem 0; border-bottom: 2px solid transparent; transition: 0.1s; }
+        .nav-brutal a:hover { color: var(--asimov-red); border-bottom: 2px solid var(--asimov-red); }
+
+        .hero-brutal { min-height: 90vh; display: flex; align-items: center; padding: 7rem 3rem 4rem; border-bottom: 1px solid rgba(227,27,35,0.3); }
+        .hero-block { max-width: 1200px; }
+        .angry-eyebrow { font-size: 0.7rem; font-weight: 700; letter-spacing: 4px; color: var(--asimov-red); text-transform: uppercase; margin-bottom: 1rem; border-left: 4px solid var(--asimov-red); padding-left: 1rem; }
+        .hero-title { font-size: 4.5rem; font-weight: 900; line-height: 1; text-transform: uppercase; color: white; letter-spacing: -2px; }
+        .hero-title .red-rage { color: var(--asimov-red); text-shadow: 0 0 20px rgba(227,27,35,0.5); display: block; margin-top: 0.25rem; }
+        .hero-description { font-size: 1rem; margin: 2rem 0; max-width: 750px; color: #b0b0b0; border-left: 3px solid var(--asimov-red); padding-left: 1.8rem; }
+        .stat-grid { display: flex; gap: 2rem; flex-wrap: wrap; margin-top: 2rem; }
+        .stat-block { background: #0a0a0a; padding: 1rem 1.8rem; border-left: 3px solid var(--asimov-red); }
+        .stat-number { font-size: 2rem; font-weight: 800; color: var(--asimov-red); font-family: 'JetBrains Mono', monospace; }
+        .stat-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; }
+
+        .brutal-section { padding: 4rem 3rem; border-top: 1px solid rgba(227,27,35,0.3); }
+        .section-marker { font-size: 1.8rem; font-weight: 800; text-transform: uppercase; margin-bottom: 2rem; display: inline-block; background: linear-gradient(90deg, var(--asimov-red) 0%, rgba(227,27,35,0.3) 80%); -webkit-background-clip: text; background-clip: text; color: transparent; border-left: 5px solid var(--asimov-red); padding-left: 1rem; }
+        .division-header { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; margin-bottom: 2rem; border-bottom: 1px solid #2a2a2a; padding-bottom: 1rem; }
+        .division-name { font-size: 1.8rem; font-weight: 800; color: var(--asimov-red); letter-spacing: -0.5px; }
+        .division-tag { font-size: 0.7rem; color: #6f6f6f; text-transform: uppercase; }
+
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
+        .product-card { background: #0a0a0a; border: 1px solid #2a2a2a; padding: 1.5rem; transition: all 0.1s linear; position: relative; }
+        .product-card:hover { border-left: 3px solid var(--asimov-red); transform: translate(-2px, -2px); box-shadow: var(--brutal-shadow); }
+        .priority-badge { position: absolute; top: 0.8rem; right: 0.8rem; font-size: 0.55rem; font-weight: 800; background: #1a1a1a; padding: 0.15rem 0.6rem; color: var(--asimov-red); letter-spacing: 1px; text-transform: uppercase; }
+        .product-card h3 { font-size: 1.3rem; font-weight: 800; color: white; margin-bottom: 0.3rem; letter-spacing: -0.2px; }
+        .product-sku { font-size: 0.6rem; color: var(--asimov-red); font-family: 'JetBrains Mono', monospace; margin-bottom: 0.8rem; }
+        .product-card p { color: #a0a0a0; font-size: 0.85rem; line-height: 1.4; margin-bottom: 1rem; }
+        .spec-list { list-style: none; margin-top: 0.8rem; border-top: 1px solid #2a2a2a; padding-top: 0.8rem; }
+        .spec-list li { font-size: 0.7rem; padding-left: 0.7rem; border-left: 2px solid var(--asimov-red); margin-bottom: 0.4rem; color: #bcbcbc; font-family: 'JetBrains Mono', monospace; }
+        .product-link-btn {
+            display: inline-block;
+            margin-top: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: transparent;
+            border: 1px solid var(--asimov-red);
+            padding: 0.45rem 1rem;
+            color: var(--asimov-red);
+            text-decoration: none;
+            transition: 0.2s ease;
+            text-align: center;
+            cursor: pointer;
+        }
+        .product-link-btn:hover {
+            background: var(--asimov-red);
+            color: #050505;
+            border-color: var(--asimov-red);
+            box-shadow: 0 0 8px rgba(227,27,35,0.6);
+        }
+
+        .factory-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.2rem; margin: 1.5rem 0; }
+        .factory-card { background: #080808; border: 1px solid #2a2a2a; padding: 1.2rem; }
+        .factory-card h4 { color: var(--asimov-red); font-size: 1rem; margin-bottom: 0.5rem; }
+        .factory-card p { font-size: 0.75rem; color: #8a8a8a; }
+
+        .code-block { background: #030303; border: 1px solid #2a2a2a; padding: 1.2rem; margin: 1rem 0; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; overflow-x: auto; white-space: pre-wrap; color: #bcbcbc; border-left: 3px solid var(--asimov-red); }
+
+        footer { background: #030303; border-top: 4px solid var(--asimov-red); padding: 3rem 3rem 2rem; }
+        .footer-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; margin-bottom: 2rem; }
+        .footer-col h4 { color: #f0f0f0; font-size: 0.8rem; letter-spacing: 2px; font-weight: 800; margin-bottom: 1rem; text-transform: uppercase; border-bottom: 1px solid var(--asimov-red); display: inline-block; }
+        .footer-col ul { list-style: none; }
+        .footer-col li { margin-bottom: 0.5rem; }
+        .footer-col a { text-decoration: none; color: #8a8a8a; font-size: 0.75rem; }
+        .footer-col a:hover { color: var(--asimov-red); }
+        .footer-logo-line { display: flex; justify-content: center; align-items: center; gap: 1rem; border-top: 1px solid rgba(227,27,35,0.3); padding-top: 2rem; margin-bottom: 1rem; }
+        .footer-logo { height: 38px; filter: brightness(0) invert(1); }
+        .footer-copyright { text-align: center; font-size: 0.65rem; color: #555; }
+
+        @media (max-width: 900px) { .hero-title { font-size: 2.8rem; } .brutal-section { padding: 2rem 1.2rem; } .footer-grid { grid-template-columns: repeat(2,1fr); } .nav-brutal { display: none; } }
+        @media (max-width: 600px) { .product-grid { grid-template-columns: 1fr; } .footer-grid { grid-template-columns: 1fr; } }
+        ::-webkit-scrollbar { width: 5px; background: #000; }
+        ::-webkit-scrollbar-thumb { background: var(--asimov-red); }
+    </style>
+</head>
+<body>
+<div class="brutal-grain"></div>
+<div class="hard-scan"></div>
+
+<header>
+    <div class="logo-hyper"><img class="logo-img" src="https://i.postimg.cc/wBJKg2fd/Asimov-logo-transparent.png" alt="ASIMOV"><span class="corp-name">ASIMOV CORPORATION</span></div>
+    <!-- Après - remplacer #prosthetics par prosthetics.html -->
+<div class="nav-brutal"><a href="#core">CORE</a><a href="#robotics">ROBOTICS</a><a href="#industrial">INDUSTRIAL</a><a href="prosthetics.html">PROSTHETICS</a><a href="#gadgets">GADGETS</a><a href="#infra">INFRASTRUCTURE</a><a href="#engineering">ENGINEERING</a></div>
+</header>
+
+<div class="hero-brutal">
+    <div class="hero-block">
+        <div class="angry-eyebrow">FOUR PILLARS: PRESENCE / DETERRENCE / CONSTRUCTION / HUMAN STABILIZATION</div>
+        <h1 class="hero-title">COMPLETE INDUSTRIAL<br><span class="red-rage">TECHNOLOGICAL ECOSYSTEM</span></h1>
+        <div class="hero-description">ASIMOV CORPORATION unifies robotics manufacturing, advanced prosthetics R&D, consumer gadgets, and a global network of high-density engineering facilities. Over 240 active product lines across 4 divisions, 17 global factories, and 8 dedicated R&D campuses.</div>
+        <div class="stat-grid"><div class="stat-block"><div class="stat-number">247</div><div class="stat-label">ACTIVE PRODUCT LINES</div></div><div class="stat-block"><div class="stat-number">17</div><div class="stat-label">GLOBAL FACTORIES</div></div><div class="stat-block"><div class="stat-number">8</div><div class="stat-label">R&D CAMPUSES</div></div><div class="stat-block"><div class="stat-number">1.2M</div><div class="stat-label">SQ.M INDUSTRIAL FLOOR</div></div></div>
+    </div>
+</div>
+
+<!-- CORE PLATFORMS (with detailed product buttons) -->
+<section id="core" class="brutal-section"><div class="division-header"><div class="division-name">PRIMARY ENGINEERING PLATFORMS</div><div class="division-tag">FLAGSHIP PRODUCT ARCHITECTURE</div></div>
+<div class="product-grid">
+    <!-- V-CUBE card with link to vcube.html -->
+    <div class="product-card"><div class="priority-badge">CRITICAL</div><h3>V-CUBE</h3><div class="product-sku">SKU: ASM-VCUBE-X7</div><p>Holographic processing unit. Real-time manipulation of digital assets — files, audio, video — through direct holographic interaction. Proprietary file-handling protocol, adaptive input logic, 8-core neural engine.</p><ul class="spec-list"><li>5120x2880 holographic projection</li><li>Low-latency gesture recognition: 3ms</li><li>Quantum-secure file protocol</li></ul><a href="vcube.html" class="product-link-btn">ACCESS V-CUBE →</a></div>
+    
+    <!-- SENTINEL card with link to sentinel.html -->
+    <div class="product-card"><div class="priority-badge">HIGH</div><h3>SENTINEL</h3><div class="product-sku">SKU: ASM-SENT-MK4</div><p>Stationary mechanized surveillance and protection unit. Fixed installation, passive deterrence, continuous observation. Establishes perimeter stability without pursuit or patrol.</p><ul class="spec-list"><li>360° optical/thermal array</li><li>Passive deterrence AI</li><li>Autonomous threat assessment</li></ul><a href="sentinel.html" class="product-link-btn">DEPLOY SENTINEL →</a></div>
+    
+    <!-- ENGIEBOT card with link to engiebot.html -->
+    <div class="product-card"><div class="priority-badge">HIGH</div><h3>ENGIEBOT</h3><div class="product-sku">SKU: ASM-ENG-H2A</div><p>Humanoid autonomous construction unit. Precision assembly, infrastructure development, heavy maintenance. No remote supervision required.</p><ul class="spec-list"><li>45kg payload per arm</li><li>Autonomous path planning</li><li>Swarm coordination protocol</li></ul><a href="engiebot.html" class="product-link-btn">ACTIVATE ENGIEBOT →</a></div>
+    
+    <!-- MINIBOT card with link to minibot.html -->
+    <div class="product-card"><div class="priority-badge">HIGH</div><h3>MINIBOT</h3><div class="product-sku">SKU: ASM-MINI-SPHR</div><p>Spherical reconnaissance drone, 7cm diameter, matte black, single forward-facing optical sensor. Multi-rotor integrated propulsion, mass-production optimized.</p><ul class="spec-list"><li>45min flight time</li><li>2km operational range</li><li>Mesh network capable</li></ul><a href="minibot.html" class="product-link-btn">DEPLOY MINIBOT →</a></div>
+</div></section>
+
+<!-- ROBOTICS DIVISION - INDUSTRIAL ARMS, MANIPULATORS, FACTORY CELLS -->
+<section id="robotics" class="brutal-section"><div class="division-header"><div class="division-name">ASIMOV ROBOTICS</div><div class="division-tag">INDUSTRIAL MANIPULATORS · AUTONOMOUS SYSTEMS · FACTORY AUTOMATION</div></div>
+<div class="product-grid">
+    <div class="product-card"><h3>ARMATURE SERIES 7-AXIS</h3><div class="product-sku">ASM-ARM7-2100</div><p>Heavy-duty industrial robotic arm. 2100mm reach, 35kg payload, ±0.02mm repeatability. Integrated force/torque sensing, EtherCAT communication.</p><ul class="spec-list"><li>7 degrees of freedom</li><li>Max TCP speed: 3.2 m/s</li><li>IP67 protection class</li></ul></div>
+    <div class="product-card"><h3>MICRO-FAB SCARA</h3><div class="product-sku">ASM-SCARA-M5</div><p>Ultra-high precision SCARA for electronics assembly. 0.001mm repeatability, cleanroom ISO 3 certified. Direct-drive linear motors.</p><ul class="spec-list"><li>500mm reach</li><li>3kg payload</li><li>Integrated vision alignment</li></ul></div>
+    <div class="product-card"><h3>DELTA PICKER V4</h3><div class="product-sku">ASM-DELTA-4X</div><p>High-speed parallel kinematic robot. 300 picks/min, food-grade variant available. Ideal for packaging, sorting, pharmaceutical lines.</p><ul class="spec-list"><li>800mm workspace diameter</li><li>Stainless steel washdown</li><li>Vision-guided picking</li></ul></div>
+    <div class="product-card"><h3>COBOT ASSIST S15</h3><div class="product-sku">ASM-COB-S15</div><p>Collaborative robot with embedded skin sensing. Power and force limiting per ISO/TS 15066. Direct teach pendant interface.</p><ul class="spec-list"><li>15kg payload</li><li>1300mm reach</li><li>Safety-rated monitored stop</li></ul></div>
+    <div class="product-card"><h3>GANTRY LOADER XL</h3><div class="product-sku">ASM-GAN-5M</div><p>Linear gantry system for CNC tending, palletizing. 5m x 2m work envelope, 200kg payload capacity.</p><ul class="spec-list"><li>Linear motor drives</li><li>Absolute encoders</li><li>Modular extrusion framing</li></ul></div>
+    <div class="product-card"><h3>WELDING CELL WELD-ARC</h3><div class="product-sku">ASM-WELD-ARC6</div><p>Integrated robotic welding cell. TIG/MIG/MAG, seam tracking, adaptive fill control. Turnkey solution.</p><ul class="spec-list"><li>6-axis arm integration</li><li>Real-time seam correction</li><li>Fume extraction ready</li></ul></div>
+    <div class="product-card"><h3>PAINT SPRAYER AUTOMATON</h3><div class="product-sku">ASM-PNT-EX</div><p>Explosion-proof painting robot. ATEX Zone 1 certified, electrostatic application, color change system.</p><ul class="spec-list"><li>6-axis wrist</li><li>Integrated fluid control</li><li>Path optimization suite</li></ul></div>
+    <div class="product-card"><h3>PALLETIZER PALL-2000</h3><div class="product-sku">ASM-PALL-2K</div><p>High-speed case palletizer. 2000 cycles/hour, multiple pattern configurations, touchscreen HMI.</p><ul class="spec-list"><li>150kg max layer weight</li><li>Pattern generation software</li><li>Safety light curtains</li></ul></div>
+</div></section>
+
+<!-- INDUSTRIAL INFRASTRUCTURE & FACTORY SYSTEMS -->
+<section id="industrial" class="brutal-section"><div class="division-header"><div class="division-name">INDUSTRIAL INFRASTRUCTURE</div><div class="division-tag">FACTORY AUTOMATION · CONVEYANCE · CONTROL SYSTEMS</div></div>
+<div class="product-grid">
+    <div class="product-card"><h3>CONVEYOR FLEX-LINE</h3><div class="product-sku">ASM-CONV-MHD</div><p>Modular belt conveyor system. 500mm to 2000mm widths, variable speed, accumulation zone capable.</p><ul class="spec-list"><li>Heavy-duty 200kg/m load</li><li>Stainless steel frame</li><li>PLC integration ready</li></ul></div>
+    <div class="product-card"><h3>AGV UNIT AGV-1500</h3><div class="product-sku">ASM-AGV-15</div><p>Automated guided vehicle. 1500kg towing capacity, LiDAR navigation, magnetic tape or natural feature guidance.</p><ul class="spec-list"><li>8h battery life</li><li>Hot-swappable batteries</li><li>Fleet management software</li></ul></div>
+    <div class="product-card"><h3>VISION INSPECTION CELL</h3><div class="product-sku">ASM-VIS-4K</div><p>Automated optical inspection system. 12MP global shutter, deep learning defect detection, pass/fail sorting.</p><ul class="spec-list"><li>0.01mm resolution</li><li>AI model training suite</li><li>Ethernet/IP connectivity</li></ul></div>
+    <div class="product-card"><h3>INDUSTRIAL CONTROLLER ICX</h3><div class="product-sku">ASM-ICX-4K</div><p>Real-time robot controller. 4kHz servo loop, EtherCAT master, integrated safety PLC, OPC-UA server.</p><ul class="spec-list"><li>Intel Xeon embedded</li><li>Dual GigE Vision ports</li><li>STO/SS1 safety circuits</li></ul></div>
+</div></section>
+
+<!-- PROSTHETICS DIVISION - MULTIPLE LIMBS, ENHANCEMENT SYSTEMS -->
+<section id="prosthetics" class="brutal-section"><div class="division-header"><div class="division-name">ASIMOV PROSTHETICS</div><div class="division-tag">NEURAL INTEGRATION · BIOMECHANICAL ENHANCEMENT · MULTI-LIMB SYSTEMS</div></div>
+<div class="product-grid">
+    <div class="product-card"><h3>LUNA ARM K2</h3><div class="product-sku">ASM-PRO-LUNA</div><p>Bionic upper limb prosthesis. 7 active degrees of freedom, individual finger control, sensory feedback via haptic array.</p><ul class="spec-list"><li>28kg grip force</li><li>Myoelectric/neural control</li><li>Osseointegration compatible</li></ul></div>
+    <div class="product-card"><h3>TERRA BIONIC KNEE</h3><div class="product-sku">ASM-PRO-TERRA</div><p>Intelligent powered knee prosthesis. Real-time gait analysis, stair ascent/descent, terrain adaptation.</p><ul class="spec-list"><li>Magnetorheological damping</li><li>15h battery life</li><li>Wireless programming</li></ul></div>
+    <div class="product-card"><h3>QUAD-LIMB INTEGRATION</h3><div class="product-sku">ASM-PRO-QUAD</div><p>Full bilateral upper/lower limb system. Synchronized control architecture, centralized neural interface hub.</p><ul class="spec-list"><li>4-limb coordination</li><li>Central battery pack</li><li>Rehabilitation protocol suite</li></ul></div>
+    <div class="product-card"><h3>EXOSUIT FRAME X-40</h3><div class="product-sku">ASM-EXO-40</div><p>Industrial exoskeleton for load assistance. 40kg payload support, passive-active hybrid actuation.</p><ul class="spec-list"><li>Spinal load reduction: 60%</li><li>Ergonomic AI adaptation</li><li>ISO 13485 certified</li></ul></div>
+    <div class="product-card"><h3>NEURAL BRIDGE N1</h3><div class="product-sku">ASM-NEU-N1</div><p>Implantable brain-computer interface. 1024-channel recording/stimulation, bidirectional communication with prosthetic limbs.</p><ul class="spec-list"><li>Wireless power/data</li><li>Closed-loop sensory feedback</li><li>Subdermal placement</li></ul></div>
+    <div class="product-card"><h3>RETINA-IMPLANT ARGOS</h3><div class="product-sku">ASM-RET-ARG</div><p>Epiretinal vision prosthesis. 1600-pixel array, external scene camera, edge-AI enhancement.</p><ul class="spec-list"><li>Color perception support</li><li>Magnetic alignment</li><li>Wireless programming</li></ul></div>
+    <div class="product-card"><h3>MUSCLE SUIT STRATOS</h3><div class="product-sku">ASM-STRAT-M1</div><p>Artificial muscle augmentation suit. Electroactive polymer actuators, 3x strength multiplier.</p><ul class="spec-list"><li>Carbon fiber exoskeleton</li><li>5h active runtime</li><li>Motion prediction AI</li></ul></div>
+    <div class="product-card"><h3>BIOMECHANICAL ANKLE</h3><div class="product-sku">ASM-ANK-F3</div><p>Powered ankle-foot prosthesis. Adaptive push-off, stair negotiation, 12Nm peak torque.</p><ul class="spec-list"><li>Lithium-ion integrated</li><li>Water-resistant IP67</li><li>Real-time gait adaptation</li></ul></div>
+</div></section>
+
+<!-- GADGETS DIVISION -->
+<section id="gadgets" class="brutal-section"><div class="division-header"><div class="division-name">ASIMOV GADGETS</div><div class="division-tag">CONSUMER TECHNOLOGY · MASS ADOPTION DEVICES</div></div>
+<div class="product-grid">
+    <div class="product-card"><h3>ECHO BAND NEO</h3><div class="product-sku">ASM-GAD-EBN</div><p>Neural interface wristband. EMG/ECG sensing, gesture control, haptic feedback, 14-day battery.</p><ul class="spec-list"><li>Health predictive analytics</li><li>Satellite SOS</li><li>Developer SDK</li></ul></div>
+    <div class="product-card"><h3>SONIC FRAME AUDIO</h3><div class="product-sku">ASM-GAD-SF</div><p>Open-ear spatial audio glasses. Bone conduction 2.0, directional beamforming, real-time translation.</p><ul class="spec-list"><li>Titanium frame</li><li>Active noise cancellation</li><li>Voice agent integration</li></ul></div>
+    <div class="product-card"><h3>ATOMOS HOME CORE</h3><div class="product-sku">ASM-GAD-ATH</div><p>Local AI smart home hub. 8 TOPS NPU, Matter/Thread/Zigbee controller, on-device LLM, no cloud dependency.</p><ul class="spec-list"><li>Privacy-first architecture</li><li>Local voice control</li><li>Home automation engine</li></ul></div>
+    <div class="product-card"><h3>SPECTRA LENS XR</h3><div class="product-sku">ASM-GAD-SLX</div><p>Standalone AR glasses. 52° FOV, MicroLED displays, hand tracking, spatial computing.</p><ul class="spec-list"><li>Waveguide optics</li><li>Remote expert integration</li><li>Industrial overlay mode</li></ul></div>
+</div></section>
+
+<!-- RESEARCH INFRASTRUCTURE - FACTORIES & R&D LABS -->
+<section id="infra" class="brutal-section"><div class="division-header"><div class="division-name">RESEARCH & MANUFACTURING INFRASTRUCTURE</div><div class="division-tag">GLOBAL FACTORIES · R&D CAMPUSES · ENGINEERING FACILITIES</div></div>
+<div class="factory-grid">
+    <div class="factory-card"><h4>FACTORY F-01 NAGOYA</h4><p>Robotics manufacturing hub. 450,000 sq.ft. 1200 robotic arms/month capacity. ISO 13485, ISO 9001 certified.</p></div>
+    <div class="factory-card"><h4>FACTORY F-02 AUSTIN</h4><p>Prosthetics & neural interface production. Cleanroom ISO 5, Class 1000 environment. Neural bridge assembly line.</p></div>
+    <div class="factory-card"><h4>FACTORY F-03 MUNICH</h4><p>Industrial controller & electronics fabrication. SMT lines, functional test cells, 24/7 operation.</p></div>
+    <div class="factory-card"><h4>R&D CAMPUS ALPHA</h4><p>Advanced robotics research. 200+ engineers. Focus: general intelligence, swarm coordination, bio-inspired actuation.</p></div>
+    <div class="factory-card"><h4>R&D CAMPUS BETA</h4><p>Biomechanics & neural engineering. 150 researchers. Neural interface, prosthetic sensory feedback, rehabilitation science.</p></div>
+    <div class="factory-card"><h4>FACTORY F-05 SHANGHAI</h4><p>Consumer gadget mass production. 2M units/year capacity. V-CUBE assembly, Spectra Lens manufacturing.</p></div>
+    <div class="factory-card"><h4>FACTORY F-07 DETROIT</h4><p>Heavy industrial arm fabrication. 350kg-2000kg payload arms. Automotive tier-1 supplier certified.</p></div>
+    <div class="factory-card"><h4>R&D CAMPUS GAMMA</h4><p>Materials science & advanced manufacturing. Metamaterials R&D, carbon composite fabrication, additive manufacturing lab.</p></div>
+</div></section>
+
+<!-- ENGINEERING ARCHITECTURE (code blocks unchanged) -->
+<section id="engineering" class="brutal-section"><div class="division-header"><div class="division-name">ENGINEERING ARCHITECTURE</div><div class="division-tag">FIRMWARE · CONTROL ALGORITHMS · SYSTEM INTEGRATION</div></div>
+<div class="code-block">
+// ASIMOV CORPORATION - SENTINEL OS v4.2.7 // ROBOTICS CONTROL STACK // REAL-TIME KERNEL<br>
+// Kinematic engine: 6/7-axis serial manipulator with redundancy resolution<br>
+typedef struct {<br>
+    float q[7];           // joint positions (rad)<br>
+    float dq[7];          // joint velocities (rad/s)<br>
+    float tau[7];         // joint torques (Nm)<br>
+    matrix_6x4 jacobian;  // geometric jacobian for force control<br>
+} RobotState;<br>
+<br>
+// Trajectory planner - minimum jerk with lookahead collision avoidance<br>
+Trajectory computeMinimumJerk(Waypoint start, Waypoint end, float max_vel, float max_acc) {<br>
+    Trajectory traj;<br>
+    float T = computeOptimalTime(start, end, max_vel, max_acc);<br>
+    for (float t = 0; t <= T; t += SAMPLE_TIME) {<br>
+        float s = 10*pow(t/T,3) - 15*pow(t/T,4) + 6*pow(t/T,5); // quintic blend<br>
+        traj.q[t] = start.q + s * (end.q - start.q);<br>
+    }<br>
+    return traj;<br>
+}<br>
+<br>
+// Force/impedance control loop - 4kHz update rate<br>
+void impedanceControl(RobotState* state, Vector6f desired_force, Matrix6f stiffness, Matrix6f damping) {<br>
+    Vector6f force_error = desired_force - state->fts_sensor;<br>
+    Vector6f velocity_cmd = stiffness.inverse() * (force_error - damping * state->cart_vel);<br>
+    state->dq_cmd = jacobian_pseudo_inverse(state->jacobian) * velocity_cmd;<br>
+}<br>
+</div>
+<div class="code-block">
+// PROSTHETICS CONTROL ARCHITECTURE // NEURAL DECODING // MYOELECTRIC SIGNAL PROCESSING //<br>
+// 64-channel EMG acquisition with adaptive notch filtering<br>
+float* acquireEMG() {<br>
+    static float emg_buffer[64][256];<br>
+    for (int ch = 0; ch < 64; ch++) {<br>
+        float raw = adc_read(ch);<br>
+        emg_buffer[ch][idx] = bandpassFilter(raw, 20, 450);  // 20-450 Hz bandpass<br>
+    }<br>
+    return processFeatures(emg_buffer);<br>
+}<br>
+</div>
+<div class="code-block">
+// INDUSTRIAL NETWORK PROTOCOLS // OPC-UA SERVER // MQTT TELEMETRY //<br>
+// OPC-UA node management for robotic cell integration<br>
+UA_NodeId createRobotNode(UA_Server* server, RobotState* state) {<br>
+    UA_ObjectAttributes objAttr = UA_ObjectAttributes_default;<br>
+    UA_NodeId robotId = UA_NODEID_NUMERIC(1, nextId++);<br>
+    UA_Server_addObjectNode(server, robotId, UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER),<br>
+                            UA_NODEID_NUMERIC(0, UA_NS0ID_BASEOBJECTTYPE),<br>
+                            UA_QUALIFIEDNAME(1, "RobotArm"), objAttr, NULL, NULL);<br>
+    return robotId;<br>
+}<br>
+</div>
+<div class="code-block">
+// FACTORY DIGITAL TWIN // ASSET ADMINISTRATION SHELL // INDUSTRY 4.0 STACK<br>
+// Asset Administration Shell for each manufacturing asset (per RAMI 4.0)<br>
+class AssetAdministrationShell {<br>
+private:<br>
+    string asset_id;           // unique identifier<br>
+public:<br>
+    void addSubmodel(string name, Submodel sm);<br>
+    string exportAASX();       // export to AutomationML/AASX format<br>
+};<br>
+</div>
+<div class="info-note" style="background:#0c0c0c; border:1px solid #2a2a2a; padding:1.2rem; margin-top:1.5rem; text-align:center; font-family:monospace; font-size:0.7rem;">
+    ASIMOV CORPORATION ENGINEERING ARCHIVE — COMPLETE TECHNICAL SPECIFICATIONS AVAILABLE THROUGH DEVELOPER PORTAL.<br>
+    247 ACTIVE PRODUCT LINES | 17 GLOBAL MANUFACTURING FACILITIES | 8 R&D CAMPUSES | 4 ENGINEERING DIVISIONS<br>
+    FOUR PILLARS: PRESENCE · DETERRENCE · CONSTRUCTION · HUMAN STABILIZATION
+</div></section>
+
+<footer>
+    <div class="footer-grid"><div class="footer-col"><h4>CORPORATE</h4><ul><li><a href="#">Four Pillars Doctrine</a></li><li><a href="#">Engineering Manifesto</a></li><li><a href="#">Global Facilities Map</a></li><li><a href="#">ISO Certifications</a></li></ul></div><div class="footer-col"><h4>DIVISIONS</h4><ul><li><a href="#">ASIMOV Robotics</a></li><li><a href="#">ASIMOV Prosthetics</a></li><li><a href="#">ASIMOV Gadgets</a></li><li><a href="#">ASIMOV Research Labs</a></li></ul></div><div class="footer-col"><h4>CORE PRODUCTS</h4><ul><li><a href="vcube.html">V-CUBE</a></li><li><a href="sentinel.html">SENTINEL</a></li><li><a href="engiebot.html">ENGIEBOT</a></li><li><a href="minibot.html">MINIBOT</a></li></ul></div><div class="footer-col"><h4>DEVELOPERS</h4><ul><li><a href="#">Sentinel OS SDK</a></li><li><a href="#">Robotics API</a></li><li><a href="#">Prosthetics Integration</a></li><li><a href="#">Technical Documentation</a></li></ul></div></div>
+    <div class="footer-logo-line"><img class="footer-logo" src="https://i.postimg.cc/wBJKg2fd/Asimov-logo-transparent.png" alt="ASIMOV"><span style="font-weight:800; letter-spacing:2px; font-size:0.7rem;">ASIMOV CORPORATION — TECHNOLOGICAL STRUCTURING ENTITY</span></div>
+    <div class="footer-copyright"><p>© 2026 ASIMOV CORPORATION. Presence · Deterrence · Construction · Human Stabilization. Long-term technological structuring. Systems designed to exert lasting influence on engineering paradigms.</p></div>
+</footer>
+
+<script>
+    const header = document.querySelector('header');
+    window.addEventListener('scroll', () => { header.style.padding = window.scrollY > 40 ? '0.6rem 3rem' : '1rem 3rem'; });
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => { anchor.addEventListener('click', function(e) { 
+        const targetId = this.getAttribute('href');
+        if(targetId && targetId !== '#') {
+            e.preventDefault(); 
+            const target = document.querySelector(targetId); 
+            if(target) window.scrollTo({ top: target.offsetTop - 70, behavior: 'smooth' });
+        }
+    }); });
+    
+    // ensure all footer product links also navigate correctly (absolute or relative)
+    // already handled via href attributes pointing to .html files
+</script>
+</body>
+</html>
