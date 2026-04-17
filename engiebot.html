@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>ASIMOV CORPORATION | ENGIEBOT — Autonomous Construction and Maintenance Mechanized Entity</title>
+    <link rel="icon" type="image/png" href="https://i.postimg.cc/Qt7rBjzL/official-Asimov-logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --asimov-red: #e31b23;
+            --stark-white: #f5f5f5;
+            --void-black: #050505;
+            --charcoal-raw: #0c0c0c;
+            --industrial-grey: #1e1e1e;
+            --concrete: #2a2a2a;
+            --steel-edge: #3a3a3a;
+            --brutal-shadow: 8px 8px 0px rgba(227, 27, 35, 0.25);
+            --sharp-border: 3px solid var(--asimov-red);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--void-black);
+            color: #cdcdcd;
+            line-height: 1.45;
+            overflow-x: hidden;
+        }
+
+        .brutal-grain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -2;
+            background-image: repeating-linear-gradient(45deg, rgba(227,27,35,0.015) 0px, rgba(227,27,35,0.015) 2px, transparent 2px, transparent 8px);
+        }
+
+        .hard-scan {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.08) 0px, rgba(0,0,0,0.08) 1px, transparent 1px, transparent 4px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 3rem;
+            background: rgba(5, 5, 5, 0.98);
+            border-bottom: var(--sharp-border);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.1s linear;
+        }
+
+        .logo-hyper { display: flex; align-items: center; gap: 1rem; }
+        .logo-img { height: 44px; width: auto; filter: brightness(0) invert(1) drop-shadow(0 0 3px var(--asimov-red)); }
+        .corp-name { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.5px; background: linear-gradient(135deg, #fff 60%, var(--asimov-red) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; text-transform: uppercase; }
+        .back-link { color: var(--asimov-red); text-decoration: none; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1.5px; border: 1px solid var(--asimov-red); padding: 0.5rem 1rem; transition: 0.1s; }
+        .back-link:hover { background: var(--asimov-red); color: black; }
+
+        .hero-product {
+            min-height: 85vh;
+            display: flex;
+            align-items: center;
+            padding: 8rem 3rem 4rem;
+            border-bottom: 1px solid rgba(227,27,35,0.3);
+        }
+        .hero-container { display: flex; flex-wrap: wrap; gap: 3rem; align-items: center; justify-content: space-between; max-width: 1400px; margin: 0 auto; }
+        .hero-visual { flex: 1; min-width: 280px; text-align: center; }
+        .product-svg { max-width: 100%; height: auto; filter: drop-shadow(0 0 25px rgba(227,27,35,0.4)); }
+        .hero-info { flex: 1; min-width: 320px; }
+        .badge-priority { display: inline-block; background: var(--asimov-red); color: black; font-weight: 800; font-size: 0.7rem; padding: 0.2rem 0.8rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem; }
+        .hero-info h1 { font-size: 4rem; font-weight: 900; line-height: 1; text-transform: uppercase; color: white; letter-spacing: -2px; margin-bottom: 1rem; }
+        .hero-info h1 span { color: var(--asimov-red); }
+        .sku-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: #6f6f6f; margin-bottom: 1.2rem; border-left: 2px solid var(--asimov-red); padding-left: 0.8rem; }
+        .hero-description { font-size: 1rem; color: #b0b0b0; margin: 1.5rem 0; border-left: 3px solid var(--asimov-red); padding-left: 1.5rem; }
+
+        .spec-highlight-grid { display: flex; gap: 1.5rem; flex-wrap: wrap; margin: 2rem 0; }
+        .spec-highlight { background: #0a0a0a; border-left: 3px solid var(--asimov-red); padding: 0.8rem 1.2rem; }
+        .spec-highlight .value { font-size: 1.6rem; font-weight: 800; color: var(--asimov-red); font-family: 'JetBrains Mono', monospace; }
+        .spec-highlight .label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; }
+
+        .brutal-section { padding: 4rem 3rem; border-top: 1px solid rgba(227,27,35,0.3); }
+        .section-marker { font-size: 1.8rem; font-weight: 800; text-transform: uppercase; margin-bottom: 2rem; display: inline-block; background: linear-gradient(90deg, var(--asimov-red) 0%, rgba(227,27,35,0.3) 80%); -webkit-background-clip: text; background-clip: text; color: transparent; border-left: 5px solid var(--asimov-red); padding-left: 1rem; }
+
+        .specs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+        .spec-card { background: #0a0a0a; border: 1px solid #2a2a2a; padding: 1.5rem; }
+        .spec-card h3 { color: var(--asimov-red); font-size: 1.1rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 1px; }
+        .spec-card ul { list-style: none; }
+        .spec-card li { font-size: 0.85rem; padding-left: 0.8rem; border-left: 2px solid var(--asimov-red); margin-bottom: 0.6rem; }
+
+        .code-block { background: #030303; border: 1px solid #2a2a2a; padding: 1.2rem; margin: 1rem 0; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; overflow-x: auto; white-space: pre-wrap; color: #bcbcbc; border-left: 3px solid var(--asimov-red); }
+
+        .capability-matrix { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin: 2rem 0; }
+        .capability-item { background: #080808; border: 1px solid #2a2a2a; padding: 1rem; text-align: center; }
+        .capability-item h4 { color: var(--asimov-red); font-size: 0.9rem; margin-bottom: 0.5rem; }
+
+        footer { background: #030303; border-top: 4px solid var(--asimov-red); padding: 2rem 3rem; }
+        .footer-copyright { text-align: center; font-size: 0.65rem; color: #555; }
+
+        @media (max-width: 900px) {
+            .hero-product { padding: 6rem 1.5rem 2rem; }
+            .hero-info h1 { font-size: 2.5rem; }
+            .brutal-section { padding: 2rem 1.2rem; }
+        }
+        ::-webkit-scrollbar { width: 5px; background: #000; }
+        ::-webkit-scrollbar-thumb { background: var(--asimov-red); }
+    </style>
+</head>
+<body>
+<div class="brutal-grain"></div>
+<div class="hard-scan"></div>
+
+<header>
+    <div class="logo-hyper">
+        <img class="logo-img" src="https://i.postimg.cc/wBJKg2fd/Asimov-logo-transparent.png" alt="ASIMOV">
+        <span class="corp-name">ASIMOV CORPORATION</span>
+    </div>
+    <a href="javascript:history.back()" class="back-link">← RETURN TO ECOSYSTEM</a>
+</header>
+
+<!-- ENGIEBOT HERO SECTION -->
+<div class="hero-product">
+    <div class="hero-container">
+        <div class="hero-visual">
+            <svg class="product-svg" width="380" height="480" viewBox="0 0 380 480" xmlns="http://www.w3.org/2000/svg">
+                <!-- Humanoid silhouette - industrial construction robot -->
+                <rect x="140" y="40" width="100" height="100" fill="none" stroke="#e31b23" stroke-width="3" rx="12"/>
+                <circle cx="190" cy="85" r="18" fill="none" stroke="#e31b23" stroke-width="2.5"/>
+                <circle cx="190" cy="85" r="8" fill="#e31b23" opacity="0.7"/>
+                <rect x="165" y="110" width="50" height="25" fill="none" stroke="#e31b23" stroke-width="2" rx="4"/>
+                
+                <!-- Torso -->
+                <rect x="120" y="140" width="140" height="160" fill="none" stroke="#e31b23" stroke-width="3" rx="8"/>
+                <!-- Chest panel -->
+                <rect x="150" y="180" width="80" height="50" fill="none" stroke="#e31b23" stroke-width="2" stroke-dasharray="4 2"/>
+                <circle cx="190" cy="205" r="8" fill="none" stroke="#e31b23" stroke-width="2"/>
+                
+                <!-- Arms -->
+                <rect x="40" y="160" width="80" height="35" fill="none" stroke="#e31b23" stroke-width="3" rx="8" transform="rotate(-15 40 160)"/>
+                <rect x="260" y="160" width="80" height="35" fill="none" stroke="#e31b23" stroke-width="3" rx="8" transform="rotate(15 340 160)"/>
+                <!-- Forearms with tool attachments -->
+                <rect x="15" y="180" width="40" height="25" fill="none" stroke="#e31b23" stroke-width="2" rx="4"/>
+                <rect x="325" y="180" width="40" height="25" fill="none" stroke="#e31b23" stroke-width="2" rx="4"/>
+                <!-- Gripper indicators -->
+                <path d="M 25 192 L 10 192 M 35 192 L 45 192" stroke="#e31b23" stroke-width="2"/>
+                <path d="M 355 192 L 370 192 M 345 192 L 335 192" stroke="#e31b23" stroke-width="2"/>
+                
+                <!-- Legs -->
+                <rect x="130" y="300" width="45" height="100" fill="none" stroke="#e31b23" stroke-width="3" rx="6"/>
+                <rect x="205" y="300" width="45" height="100" fill="none" stroke="#e31b23" stroke-width="3" rx="6"/>
+                <!-- Feet -->
+                <rect x="115" y="395" width="75" height="20" fill="none" stroke="#e31b23" stroke-width="2" rx="3"/>
+                <rect x="190" y="395" width="75" height="20" fill="none" stroke="#e31b23" stroke-width="2" rx="3"/>
+                
+                <!-- Construction tools floating indicators -->
+                <path d="M 320 280 L 340 270 L 335 290 Z" fill="none" stroke="#e31b23" stroke-width="2"/>
+                <path d="M 40 280 L 20 270 L 25 290 Z" fill="none" stroke="#e31b23" stroke-width="2"/>
+                
+                <!-- Industrial details -->
+                <line x1="150" y1="230" x2="230" y2="230" stroke="#e31b23" stroke-width="1.5" stroke-dasharray="3 2"/>
+                <text x="170" y="460" font-family="monospace" font-size="9" fill="#e31b23">ENGIEBOT H2A</text>
+            </svg>
+        </div>
+        <div class="hero-info">
+            <div class="badge-priority">HIGH PRIORITY · AUTONOMOUS WORKFORCE PLATFORM</div>
+            <h1>ENGIE<span>BOT</span></h1>
+            <div class="sku-tag">SKU: ASM-ENG-H2A | CLASSIFICATION: AUTONOMOUS CONSTRUCTION AND MAINTENANCE MECHANIZED ENTITY</div>
+            <div class="hero-description">
+                Humanoid-form mechanized unit dedicated to construction, maintenance, and technical intervention. Operates in civilian and industrial environments. Engineered for physical labor, precision assembly, and infrastructure development. Functions as autonomous workforce platform capable of executing complex construction tasks without remote supervision.
+            </div>
+            <div class="spec-highlight-grid">
+                <div class="spec-highlight"><div class="value">45kg</div><div class="label">PER-ARM PAYLOAD</div></div>
+                <div class="spec-highlight"><div class="value">2100mm</div><div class="label">VERTICAL REACH</div></div>
+                <div class="spec-highlight"><div class="value">24h</div><div class="label">OPERATIONAL CYCLE</div></div>
+                <div class="spec-highlight"><div class="value">SWARM</div><div class="label">COORDINATION READY</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- TECHNICAL ARCHITECTURE -->
+<section class="brutal-section">
+    <div class="section-marker">[ HUMANOID KINEMATIC ARCHITECTURE ]</div>
+    <div class="specs-grid">
+        <div class="spec-card">
+            <h3>MECHANICAL STRUCTURE</h3>
+            <ul>
+                <li>Height: 1850mm (adjustable stance)</li>
+                <li>Mass: 165kg (including battery system)</li>
+                <li>Degrees of freedom: 32 total (6 per arm, 6 per leg, 6 torso, 8 per hand)</li>
+                <li>Chassis: Carbon fiber composite + aerospace aluminum</li>
+                <li>Joint actuation: High-torque brushless DC servos with harmonic drives</li>
+                <li>Structural load capacity: 120kg distributed payload</li>
+            </ul>
+        </div>
+        <div class="spec-card">
+            <h3>ACTUATION SYSTEM</h3>
+            <ul>
+                <li>Peak joint torque: 350 Nm (shoulder/hip)</li>
+                <li>Continuous joint torque: 180 Nm</li>
+                <li>Joint velocity: 180°/s maximum</li>
+                <li>Backlash: &lt;0.5 arcmin harmonic reduction</li>
+                <li>Integrated torque sensing: ±0.1 Nm resolution</li>
+                <li>Thermal management: Active liquid cooling (critical joints)</li>
+            </ul>
+        </div>
+        <div class="spec-card">
+            <h3>END EFFECTORS & TOOLING</h3>
+            <ul>
+                <li>Interchangeable tool interface (ISO 9409-1 compatible)</li>
+                <li>Gripper: 3-finger adaptive, 0-200N grip force</li>
+                <li>Tool changer: Automatic, 6-second swap</li>
+                <li>Available attachments: drill, welder, grinder, vacuum gripper, inspection probe</li>
+                <li>Tactile sensing: 256 pressure points per fingertip</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- AUTONOMOUS OPERATION FRAMEWORK -->
+<section class="brutal-section">
+    <div class="section-marker">[ AUTONOMOUS OPERATION · NO REMOTE SUPERVISION ]</div>
+    <div class="code-block">
+// ENGIEBOT AUTONOMY STACK // MISSION PLANNING & EXECUTION //<br>
+<br>
+class EngieBotCore {<br>
+private:<br>
+    MissionPlanner planner;<br>
+    KinematicController kinematics;<br>
+    SafetySystem safety;<br>
+    ToolManager tools;<br>
+    <br>
+public:<br>
+    void executeConstructionTask(Blueprint blueprint) {<br>
+        // Phase 1: Site analysis and material localization<br>
+        PointCloud site_scan = lidar.scan(360);<br>
+        MaterialInventory materials = vision.detectMaterials(site_scan);<br>
+        <br>
+        // Phase 2: Task decomposition into atomic actions<br>
+        vector&lt;Action&gt; actions = planner.decompose(blueprint, materials);<br>
+        <br>
+        // Phase 3: Execution with real-time adaptation<br>
+        for (Action& action : actions) {<br>
+            Trajectory traj = kinematics.computeTrajectory(action);<br>
+            while (!traj.complete()) {<br>
+                // Real-time obstacle detection and replanning<br>
+                if (safety.detectObstacle()) {<br>
+                    traj = kinematics.replan(traj, safety.obstacleMap());<br>
+                }<br>
+                executeTrajectorySegment(traj);<br>
+            }<br>
+        }<br>
+        <br>
+        // Phase 4: Quality verification<br>
+        verifyWorkmanship(blueprint);<br>
+    }<br>
+};<br>
+<br>
+// Bipedal locomotion control - Model Predictive Control (MPC)<br>
+void updateLocomotion() {<br>
+    // 1kHz control loop for balance and gait<br>
+    Vector6f com_state = getCenterOfMass();<br>
+    Vector6f zmp = computeZeroMomentPoint(com_state);<br>
+    <br>
+    // MPC horizon: 1 second, 50ms timesteps<br>
+    for (int t = 0; t < 20; t++) {<br>
+        footstep_targets[t] = solveFootstepPlacement(zmp, gait_phase);<br>
+        joint_torques[t] = inverseDynamics(footstep_targets[t]);<br>
+    }<br>
+    <br>
+    applyTorques(joint_torques[0]);<br>
+}<br>
+    </div>
+</section>
+
+<!-- CONSTRUCTION & MAINTENANCE CAPABILITIES -->
+<section class="brutal-section">
+    <div class="section-marker">[ DEPLOYMENT CAPABILITIES ]</div>
+    <div class="capability-matrix">
+        <div class="capability-item"><h4>PRECISION ASSEMBLY</h4><p>±0.2mm positioning accuracy. Component insertion, fastening, alignment.</p></div>
+        <div class="capability-item"><h4>STRUCTURAL FABRICATION</h4><p>Steel stud framing, drywall installation, concrete finishing.</p></div>
+        <div class="capability-item"><h4>WELDING & JOINING</h4><p>MIG/TIG arc welding, ultrasonic bonding, adhesive dispensing.</p></div>
+        <div class="capability-item"><h4>MATERIAL HANDLING</h4><p>45kg per arm, coordinated dual-arm lift up to 80kg.</p></div>
+        <div class="capability-item"><h4>INFRASTRUCTURE MAINTENANCE</h4><p>Inspection, repair, predictive maintenance routines.</p></div>
+        <div class="capability-item"><h4>SITE SURVEY</h4><p>LiDAR mapping, structural integrity assessment, progress documentation.</p></div>
+    </div>
+    <div class="specs-grid">
+        <div class="spec-card">
+            <h3>PERCEPTION SYSTEM</h3>
+            <ul>
+                <li>Stereo vision: 2x 5MP global shutter, 60fps</li>
+                <li>LiDAR: 360° scanning, 50m range, 1.2M pts/sec</li>
+                <li>Depth cameras: 4x Intel RealSense D455 (stereo IR)</li>
+                <li>Thermal imaging: 640x512, for structural analysis</li>
+                <li>Multispectral: UV fluorescence for material identification</li>
+                <li>SLAM: Real-time localization with 2cm accuracy</li>
+            </ul>
+        </div>
+        <div class="spec-card">
+            <h3>COGNITIVE ARCHITECTURE</h3>
+            <ul>
+                <li>NPU: 50 TOPS dedicated to perception and planning</li>
+                <li>Memory: 64GB LPDDR5, 2TB NVMe storage</li>
+                <li>On-device LLM for natural language instruction parsing</li>
+                <li>Procedural memory: 10,000+ construction task templates</li>
+                <li>Continuous learning: telemetry feedback to central fleet system</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- SWARM COORDINATION & FLEET MANAGEMENT -->
+<section class="brutal-section">
+    <div class="section-marker">[ SWARM COORDINATION · MULTI-UNIT DEPLOYMENT ]</div>
+    <div class="code-block">
+// ENGIEBOT SWARM PROTOCOL // COLLABORATIVE CONSTRUCTION //<br>
+<br>
+class EngieBotSwarm {<br>
+private:<br>
+    vector&lt;EngieBot&gt; units;<br>
+    CentralOrchestrator orchestrator;<br>
+    <br>
+public:<br>
+    void assignConstructionProject(Project project) {<br>
+        // Decompose project into parallelizable tasks<br>
+        vector&lt;Task&gt; tasks = orchestrator.decompose(project);<br>
+        <br>
+        // Assign tasks based on unit capabilities and proximity<br>
+        for (Task& task : tasks) {<br>
+            EngieBot* best_unit = findOptimalUnit(task);<br>
+            best_unit->assign(task);<br>
+        }<br>
+        <br>
+        // Real-time collision avoidance between units<br>
+        while (anyActive()) {<br>
+            for (auto& unit : units) {<br>
+                Path path = unit.currentPath();<br>
+                for (auto& other : units) {<br>
+                    if (unit.id != other.id) {<br>
+                        path = collisionAvoidance(path, other.position());<br>
+                    }<br>
+                }<br>
+                unit.updatePath(path);<br>
+            }<br>
+        }<br>
+    }<br>
+    <br>
+    void synchronizeConstruct() {<br>
+        // Phase synchronization for coordinated lifts<br>
+        for (auto& task : activeTasks) {<br>
+            if (task.type == COORDINATED_LIFT) {<br>
+                syncAllUnits(task.participants, task.timestamp);<br>
+            }<br>
+        }<br>
+    }<br>
+};<br>
+<br>
+// Fleet telemetry & predictive maintenance<br>
+void monitorFleetHealth() {<br>
+    for (EngieBot& unit : fleet) {<br>
+        float joint_temp = unit.getJointTemperature();<br>
+        float vibration = unit.getVibrationSpectrum();<br>
+        int cycle_count = unit.getCycleCount();<br>
+        <br>
+        if (predictFailure(joint_temp, vibration, cycle_count)) {<br>
+            scheduleMaintenance(unit.id);<br>
+            redeployWorkload(unit.id);<br>
+        }<br>
+    }<br>
+}<br>
+    </div>
+</section>
+
+<!-- TECHNICAL SPECIFICATIONS -->
+<section class="brutal-section">
+    <div class="section-marker">[ COMPLETE TECHNICAL SPECIFICATIONS ]</div>
+    <div class="specs-grid" style="grid-template-columns: 1fr;">
+        <div class="spec-card">
+            <h3>POWER & ENERGY SYSTEMS</h3>
+            <ul>
+                <li>Battery: Swappable lithium iron phosphate, 5kWh capacity</li>
+                <li>Operational runtime: 8-12 hours (heavy duty), 24 hours (light duty)</li>
+                <li>Hot-swap: 3-minute battery exchange</li>
+                <li>Charging: 2-hour fast charge, 4-hour standard</li>
+                <li>External power: 240V AC tether for continuous operation</li>
+                <li>Energy recovery: Regenerative braking in joints</li>
+            </ul>
+        </div>
+        <div class="spec-card">
+            <h3>ENVIRONMENTAL & SAFETY</h3>
+            <ul>
+                <li>Ingress protection: IP54 (IP67 optional for wet environments)</li>
+                <li>Operating temperature: -20°C to 50°C</li>
+                <li>Safety certifications: ISO 10218, ANSI/RIA R15.06</li>
+                <li>Collision detection: 5ms response, force limiting</li>
+                <li>Emergency stop: Redundant hardware E-stop (wrist-mounted)</li>
+                <li>Light curtain: Active perimeter monitoring for human proximity</li>
+            </ul>
+        </div>
+        <div class="spec-card">
+            <h3>COMMUNICATIONS & INTEGRATION</h3>
+            <ul>
+                <li>Wi-Fi 6E, 5G cellular, Ethernet (docking station)</li>
+                <li>Mesh networking: Unit-to-unit direct communication</li>
+                <li>BIM integration: Direct read of Revit, IFC, and CAD formats</li>
+                <li>API: REST, MQTT, OPC-UA for industrial control systems</li>
+                <li>Remote monitoring: Fleet management dashboard (optional)</li>
+                <li>Encryption: AES-256 for all data transmission</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- MANUFACTURING & DEPLOYMENT -->
+<section class="brutal-section">
+    <div class="section-marker">[ MANUFACTURING & FIELD DEPLOYMENT ]</div>
+    <div class="specs-grid">
+        <div class="spec-card">
+            <h3>PRODUCTION FACILITIES</h3>
+            <ul>
+                <li>Primary: ASIMOV F-01 (Nagoya, Japan)</li>
+                <li>Secondary: ASIMOV F-07 (Detroit, USA)</li>
+                <li>Monthly capacity: 450 units</li>
+                <li>Lead time: 12-16 weeks (standard configuration)</li>
+            </ul>
+        </div>
+        <div class="spec-card">
+            <h3>FIELD SUPPORT</h3>
+            <ul>
+                <li>Deployment: On-site commissioning included</li>
+                <li>Training: Operator certification program (3 days)</li>
+                <li>Remote support: 24/7 engineering hotline</li>
+                <li>Spare parts: 5-year availability guarantee</li>
+                <li>Warranty: 3 years comprehensive, 10-year structural</li>
+            </ul>
+        </div>
+        <div class="spec-card">
+            <h3>CERTIFICATION & COMPLIANCE</h3>
+            <ul>
+                <li>CE marked, UKCA, FCC, ICES</li>
+                <li>ISO 13485 (medical-grade manufacturing optional)</li>
+                <li>ISO 9001:2025 certified facilities</li>
+                <li>UL 1740 certified (industrial robots)</li>
+                <li>NDAA compliant, TAA compliant models available</li>
+            </ul>
+        </div>
+    </div>
+    <div class="code-block">
+// FINAL ASSEMBLY & TESTING PROTOCOL //<br>
+<br>
+bool validateEngieBot(EngieBot unit) {<br>
+    // Kinematic calibration<br>
+    assert(unit.endEffectorAccuracy() < 0.2);          // mm<br>
+    assert(unit.jointBacklash() < 0.008);              // radians<br>
+    <br>
+    // Load testing<br>
+    assert(unit.peakLiftCapacity() >= 45.0);           // kg per arm<br>
+    assert(unit.coordinatedLift() >= 80.0);            // kg dual arm<br>
+    <br>
+    // Autonomy verification<br>
+    assert(unit.completeConstructionTask(TEST_BLUEPRINT));<br>
+    assert(unit.obstacleAvoidanceSuccess() > 0.99);    // 99% success rate<br>
+    <br>
+    // Safety systems<br>
+    assert(unit.collisionResponse() < 0.005);          // 5ms response<br>
+    <br>
+    return true;<br>
+}<br>
+    </div>
+</section>
+
+<footer>
+    <div class="footer-copyright">
+        <p>© 2026 ASIMOV CORPORATION. ENGIEBOT is a registered trademark of Asimov Industries. Autonomous Construction and Maintenance Mechanized Entity — Humanoid Workforce Platform.</p>
+        <p style="margin-top: 0.5rem;">Four Pillars: Presence · Deterrence · Construction · Human Stabilization</p>
+        <p style="margin-top: 0.5rem; font-family: monospace;">Autonomous execution of complex construction tasks without remote supervision.</p>
+    </div>
+</footer>
+
+<script>
+    const header = document.querySelector('header');
+    window.addEventListener('scroll', () => { header.style.padding = window.scrollY > 40 ? '0.6rem 3rem' : '1rem 3rem'; });
+</script>
+</body>
+</html>

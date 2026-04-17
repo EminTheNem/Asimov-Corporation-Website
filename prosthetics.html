@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>ASIMOV PROSTHETICS | Prosthesis Configurator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --asimov-red: #c61a22;
+            --asimov-red-dark: #8a1218;
+            --bg-dark: #050505;
+            --panel-bg: #0c0c0c;
+            --border-color: #2a2a2a;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
+
+        /* header */
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 0.75rem 2rem;
+            background: rgba(5,5,5,0.96);
+            border-bottom: 2px solid var(--asimov-red);
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(8px);
+        }
+
+        .logo {
+            display: flex;
+            align-items: baseline;
+            gap: 0.75rem;
+        }
+
+        .logo-mono {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--asimov-red);
+        }
+
+        .logo-text {
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #e0e0e0;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: #aaa;
+            text-decoration: none;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.1s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--asimov-red);
+        }
+
+        /* main container */
+        .app-container {
+            margin-top: 60px;
+            min-height: calc(100vh - 60px);
+        }
+
+        /* VIEW 1: 2D SCHEMATIC SELECTION */
+        .schematic-view {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 60px);
+            padding: 2rem;
+        }
+
+        .schematic-title {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .schematic-title h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: white;
+        }
+
+        .schematic-title p {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 0.5rem;
+            font-family: monospace;
+        }
+
+        .body-schematic {
+            position: relative;
+            max-width: 500px;
+            width: 100%;
+            margin: 0 auto;
+            cursor: pointer;
+        }
+
+        .body-schematic svg {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .zone {
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .zone:hover {
+            opacity: 0.7;
+        }
+
+        .zone-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            fill: #c61a22;
+            font-weight: bold;
+        }
+
+        .instruction {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.75rem;
+            color: #666;
+            border-top: 1px solid #222;
+            padding-top: 1.5rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* VIEW 2: 3D PROSTHESIS VIEWER */
+        .prosthesis-view {
+            display: none;
+            flex-direction: column;
+            min-height: calc(100vh - 60px);
+        }
+
+        .viewer-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 2rem;
+            background: var(--panel-bg);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .back-btn {
+            background: transparent;
+            border: 1px solid var(--asimov-red);
+            padding: 0.5rem 1.2rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--asimov-red);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .back-btn:hover {
+            background: var(--asimov-red);
+            color: black;
+        }
+
+        .prosthesis-info {
+            text-align: center;
+        }
+
+        .prosthesis-info h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .prosthesis-info .sku {
+            font-size: 0.65rem;
+            color: var(--asimov-red);
+            font-family: monospace;
+        }
+
+        .viewer-layout {
+            display: flex;
+            flex: 1;
+            min-height: calc(100vh - 120px);
+        }
+
+        .canvas-3d {
+            flex: 2;
+            background: #010101;
+            position: relative;
+        }
+
+        #prosthesisCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .config-sidebar {
+            flex: 1;
+            min-width: 320px;
+            background: var(--panel-bg);
+            padding: 1.5rem;
+            border-left: 1px solid var(--border-color);
+            overflow-y: auto;
+        }
+
+        .control-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .control-label {
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #999;
+            margin-bottom: 0.5rem;
+        }
+
+        .finish-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .finish-btn {
+            background: transparent;
+            border: 1px solid #333;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.7rem;
+            font-family: monospace;
+            color: #ccc;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+
+        .finish-btn.active {
+            border-color: var(--asimov-red);
+            background: var(--asimov-red);
+            color: black;
+            font-weight: 700;
+        }
+
+        .tier-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .tier-btn {
+            background: #0a0a0a;
+            border: 1px solid #222;
+            padding: 0.7rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+
+        .tier-btn.active {
+            border-left: 3px solid var(--asimov-red);
+            background: #121212;
+        }
+
+        .spec-box {
+            background: #080808;
+            padding: 1rem;
+            font-family: monospace;
+            font-size: 0.7rem;
+            border-top: 1px solid #222;
+            border-bottom: 1px solid #222;
+            margin: 1rem 0;
+        }
+
+        .order-btn {
+            width: 100%;
+            background: transparent;
+            border: 2px solid var(--asimov-red);
+            padding: 0.8rem;
+            font-weight: 800;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--asimov-red);
+            cursor: pointer;
+            font-family: monospace;
+            margin-top: 1rem;
+        }
+
+        .order-btn:hover {
+            background: var(--asimov-red);
+            color: black;
+        }
+
+        @media (max-width: 800px) {
+            .viewer-layout { flex-direction: column; }
+            .canvas-3d { height: 50vh; }
+            .top-bar { padding: 0.5rem 1rem; }
+            .nav-links { gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="top-bar">
+    <div class="logo">
+        <span class="logo-mono">[A]</span>
+        <span class="logo-text">ASIMOV PROSTHETICS</span>
+    </div>
+    <div class="nav-links">
+        <a href="asimov_test.html">CORE</a>
+        <a href="asimov_test.html#robotics">ROBOTICS</a>
+        <a href="asimov_test.html#industrial">INDUSTRIAL</a>
+        <a href="#" class="active">PROSTHETICS</a>
+        <a href="asimov_test.html#gadgets">GADGETS</a>
+        <a href="asimov_test.html#infra">INFRA</a>
+    </div>
+</div>
+
+<!-- VIEW 1: 2D Schematic -->
+<div id="schematicView" class="schematic-view">
+    <div class="schematic-title">
+        <h1>ANATOMICAL SELECTOR</h1>
+        <p>Click on any zone to configure a prosthesis</p>
+    </div>
+    <div class="body-schematic">
+        <svg viewBox="0 0 400 700" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Head -->
+            <circle cx="200" cy="70" r="35" fill="#1a1a1a" stroke="#c61a22" stroke-width="2"/>
+            
+            <!-- Neck -->
+            <rect x="185" y="100" width="30" height="25" fill="#1a1a1a" stroke="#c61a22" stroke-width="1.5"/>
+            
+            <!-- Torso -->
+            <path d="M155 120 L245 120 L260 280 L140 280 L155 120Z" fill="#1a1a1a" stroke="#c61a22" stroke-width="2" class="zone" data-limb="torso" style="cursor:pointer"/>
+            
+            <!-- Right Arm -->
+            <path d="M155 130 L100 150 L85 230 L95 240 L110 230 L125 155 L155 145Z" fill="#1a1a1a" stroke="#c61a22" stroke-width="2" class="zone" data-limb="right_arm" style="cursor:pointer"/>
+            
+            <!-- Left Arm -->
+            <path d="M245 130 L300 150 L315 230 L305 240 L290 230 L275 155 L245 145Z" fill="#1a1a1a" stroke="#c61a22" stroke-width="2" class="zone" data-limb="left_arm" style="cursor:pointer"/>
+            
+            <!-- Right Leg -->
+            <path d="M180 280 L180 450 L160 530 L140 530 L145 450 L155 280Z" fill="#1a1a1a" stroke="#c61a22" stroke-width="2" class="zone" data-limb="right_leg" style="cursor:pointer"/>
+            
+            <!-- Left Leg -->
+            <path d="M220 280 L220 450 L240 530 L260 530 L255 450 L245 280Z" fill="#1a1a1a" stroke="#c61a22" stroke-width="2" class="zone" data-limb="left_leg" style="cursor:pointer"/>
+            
+            <!-- Right Foot -->
+            <path d="M140 530 L125 560 L155 560 L160 530Z" fill="#1a1a1a" stroke="#c61a22" stroke-width="1.5" class="zone" data-limb="foot" style="cursor:pointer"/>
+            
+            <!-- Left Foot -->
+            <path d="M260 530 L275 560 L245 560 L240 530Z" fill="#1a1a1a" stroke="#c61a22" stroke-width="1.5" class="zone" data-limb="foot" style="cursor:pointer"/>
+            
+            <!-- Labels -->
+            <text x="210" y="55" fill="#c61a22" font-size="10" font-family="monospace">HEAD</text>
+            <text x="140" y="200" fill="#c61a22" font-size="9" font-family="monospace">R ARM</text>
+            <text x="255" y="200" fill="#c61a22" font-size="9" font-family="monospace">L ARM</text>
+            <text x="200" y="370" fill="#c61a22" font-size="9" font-family="monospace">TORSO</text>
+            <text x="135" y="400" fill="#c61a22" font-size="9" font-family="monospace">R LEG</text>
+            <text x="255" y="400" fill="#c61a22" font-size="9" font-family="monospace">L LEG</text>
+        </svg>
+    </div>
+    <div class="instruction">
+        Click on any body region to begin prosthesis configuration.<br>
+        ASIMOV medical-grade prosthetics — custom fabricated per prescription.
+    </div>
+</div>
+
+<!-- VIEW 2: 3D Prosthesis Viewer (initially hidden) -->
+<div id="prosthesisView" class="prosthesis-view">
+    <div class="viewer-header">
+        <button class="back-btn" id="backToSchematicBtn">← BACK TO SELECTOR</button>
+        <div class="prosthesis-info">
+            <h2 id="viewerTitle">BIONIC ARM MK-VII</h2>
+            <div class="sku" id="viewerSku">ASM-PRO-ARM-X9</div>
+        </div>
+        <div style="width: 100px;"></div>
+    </div>
+    <div class="viewer-layout">
+        <div class="canvas-3d">
+            <canvas id="prosthesisCanvas"></canvas>
+        </div>
+        <div class="config-sidebar">
+            <div class="control-group">
+                <div class="control-label">SURFACE FINISH</div>
+                <div class="finish-options" id="finishContainer"></div>
+            </div>
+            <div class="control-group">
+                <div class="control-label">PERFORMANCE TIER</div>
+                <div class="tier-options" id="tierContainer"></div>
+            </div>
+            <div class="spec-box" id="specBox"></div>
+            <button class="order-btn" id="orderProsthesisBtn">REQUEST CLINICAL QUOTE →</button>
+            <div style="font-size:0.55rem; color:#555; text-align:center; margin-top:1rem;">
+                Prescription required · ISO 13485 · CE marked
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.128.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.128.0/examples/jsm/"
+        }
+    }
+</script>
+
+<script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+    // ============================================
+    // PROSTHESIS DATABASE
+    // ============================================
+    const prosthesisDB = {
+        right_arm: {
+            name: "BIONIC ARM MK-VII",
+            sku: "ASM-PRO-ARM-X9",
+            specs: "7 DOF · myoelectric control · 28kg grip · titanium chassis",
+            prices: { standard: 4290, professional: 7990, custom: 12490 },
+            modelType: "arm",
+            side: "right"
+        },
+        left_arm: {
+            name: "BIONIC ARM MK-VII",
+            sku: "ASM-PRO-ARM-L9",
+            specs: "7 DOF · neural interface ready · 4200mAh battery · IP67",
+            prices: { standard: 4290, professional: 7990, custom: 12490 },
+            modelType: "arm",
+            side: "left"
+        },
+        right_leg: {
+            name: "POWERED KNEE SYSTEM",
+            sku: "ASM-PRO-LEG-R4",
+            specs: "microprocessor knee · terrain adaptation · 15h runtime",
+            prices: { standard: 4950, professional: 8950, custom: 13900 },
+            modelType: "leg",
+            side: "right"
+        },
+        left_leg: {
+            name: "POWERED KNEE SYSTEM",
+            sku: "ASM-PRO-LEG-L4",
+            specs: "intelligent damper · stair recognition · fall detection",
+            prices: { standard: 4950, professional: 8950, custom: 13900 },
+            modelType: "leg",
+            side: "left"
+        },
+        torso: {
+            name: "EXOSKELETAL TRUNK",
+            sku: "ASM-EXO-TOR-M2",
+            specs: "spinal load reduction 60% · carbon fiber · adaptive lumbar",
+            prices: { standard: 6890, professional: 11200, custom: 16900 },
+            modelType: "torso",
+            side: "center"
+        },
+        foot: {
+            name: "DYNAMIC FOOT",
+            sku: "ASM-PRO-FOOT-F3",
+            specs: "carbon energy return · multi-axis ankle · IP68",
+            prices: { standard: 3250, professional: 5890, custom: 8450 },
+            modelType: "foot",
+            side: "bilateral"
+        }
+    };
+
+    const finishes = [
+        { id: "black", label: "MEDICAL BLACK", color: "#1a1a1a" },
+        { id: "titanium", label: "TITANIUM", color: "#9aa9b5" },
+        { id: "white", label: "HOSPITAL WHITE", color: "#eaeef2" },
+        { id: "red", label: "SIGNAL RED", color: "#c61a22" },
+        { id: "carbon", label: "RAW CARBON", color: "#2d2d2d" }
+    ];
+
+    let currentLimb = "right_arm";
+    let currentFinish = finishes[0];
+    let currentTier = "professional";
+
+    // DOM elements
+    const schematicView = document.getElementById("schematicView");
+    const prosthesisView = document.getElementById("prosthesisView");
+    const backBtn = document.getElementById("backToSchematicBtn");
+    const viewerTitle = document.getElementById("viewerTitle");
+    const viewerSku = document.getElementById("viewerSku");
+    const specBox = document.getElementById("specBox");
+    const orderBtn = document.getElementById("orderProsthesisBtn");
+
+    // Switch views
+    function showSchematic() {
+        schematicView.style.display = "flex";
+        prosthesisView.style.display = "none";
+    }
+
+    function showProsthesisView(limbKey) {
+        currentLimb = limbKey;
+        updateViewerUI();
+        init3DForLimb(limbKey);
+        schematicView.style.display = "none";
+        prosthesisView.style.display = "flex";
+    }
+
+    function updateViewerUI() {
+        const data = prosthesisDB[currentLimb];
+        viewerTitle.innerText = data.name;
+        viewerSku.innerText = data.sku;
+        updateSpecs();
+        buildFinishSelector3D();
+        buildTierSelector3D();
+    }
+
+    function updateSpecs() {
+        const data = prosthesisDB[currentLimb];
+        const price = data.prices[currentTier];
+        let tierDesc = currentTier === "standard" ? "Standard · 3yr warranty" : 
+                       currentTier === "professional" ? "Professional · 5yr warranty · AI enhanced" : 
+                       "Custom · Bespoke socket · Priority";
+        specBox.innerHTML = `
+            <div>TIER: ${currentTier.toUpperCase()} — ${price.toLocaleString()} EUR</div>
+            <div>SPECS: ${data.specs}</div>
+            <div>${tierDesc}</div>
+            <div>LEAD TIME: ${currentTier === 'custom' ? '28 days' : '14 days'}</div>
+        `;
+    }
+
+    function buildFinishSelector3D() {
+        const container = document.getElementById("finishContainer");
+        container.innerHTML = "";
+        finishes.forEach(fin => {
+            const btn = document.createElement("button");
+            btn.className = "finish-btn";
+            if (currentFinish.id === fin.id) btn.classList.add("active");
+            btn.innerText = fin.label;
+            btn.addEventListener("click", () => {
+                currentFinish = fin;
+                document.querySelectorAll("#finishContainer .finish-btn").forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+                applyColorToModel(fin.color);
+            });
+            container.appendChild(btn);
+        });
+    }
+
+    function buildTierSelector3D() {
+        const container = document.getElementById("tierContainer");
+        container.innerHTML = "";
+        const tiers = ["standard", "professional", "custom"];
+        const data = prosthesisDB[currentLimb];
+        tiers.forEach(tier => {
+            const btn = document.createElement("div");
+            btn.className = "tier-btn";
+            if (currentTier === tier) btn.classList.add("active");
+            btn.innerHTML = `<span>${tier.toUpperCase()}</span><span style="color:#c61a22;">${data.prices[tier].toLocaleString()} €</span>`;
+            btn.addEventListener("click", () => {
+                currentTier = tier;
+                updateSpecs();
+                document.querySelectorAll("#tierContainer .tier-btn").forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+            });
+            container.appendChild(btn);
+        });
+    }
+
+    // ============================================
+    // THREE.JS - 3D PROSTHESIS MODEL
+    // ============================================
+    let currentScene, currentCamera, currentRenderer, currentControls, currentModelGroup;
+
+    function init3DForLimb(limbKey) {
+        const canvas = document.getElementById("prosthesisCanvas");
+        if (!canvas) return;
+        
+        if (currentRenderer) {
+            currentRenderer.dispose();
+            if (currentScene) {
+                while(currentScene.children.length > 0) currentScene.remove(currentScene.children[0]);
+            }
+        }
+
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x010101);
+        scene.fog = new THREE.FogExp2(0x010101, 0.008);
+        
+        const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
+        camera.position.set(2, 1.5, 2.5);
+        camera.lookAt(0, 0.5, 0);
+        
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+        
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.06;
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 1.5;
+        controls.enableZoom = true;
+        controls.target.set(0, 0.5, 0);
+        
+        // Lighting
+        const ambient = new THREE.AmbientLight(0x222222);
+        scene.add(ambient);
+        const mainLight = new THREE.DirectionalLight(0xffffff, 1.2);
+        mainLight.position.set(2, 3, 2);
+        scene.add(mainLight);
+        const fillLight = new THREE.PointLight(0x553333, 0.5);
+        fillLight.position.set(1, 1, 1.5);
+        scene.add(fillLight);
+        const rimLight = new THREE.PointLight(0x336699, 0.4);
+        rimLight.position.set(-1, 1.2, -1.5);
+        scene.add(rimLight);
+        
+        // Create model based on limb type
+        const modelGroup = new THREE.Group();
+        const data = prosthesisDB[limbKey];
+        const mat = new THREE.MeshStandardMaterial({ color: currentFinish.color, metalness: 0.85, roughness: 0.25 });
+        const accentMat = new THREE.MeshStandardMaterial({ color: 0xc61a22, metalness: 0.9 });
+        
+        if (data.modelType === "arm") {
+            const isRight = data.side === "right";
+            const sign = isRight ? 1 : -1;
+            const upperArm = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.14, 0.9, 32), mat);
+            upperArm.position.set(sign * 0.6, 0.9, 0);
+            const forearm = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.11, 0.8, 32), mat);
+            forearm.position.set(sign * 0.6, 0.25, 0);
+            const joint = new THREE.Mesh(new THREE.SphereGeometry(0.12, 24, 24), accentMat);
+            joint.position.set(sign * 0.6, 0.65, 0);
+            const hand = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.2, 0.25), mat);
+            hand.position.set(sign * 0.6, -0.15, 0.15);
+            modelGroup.add(upperArm, forearm, joint, hand);
+        } 
+        else if (data.modelType === "leg") {
+            const isRight = data.side === "right";
+            const sign = isRight ? 1 : -1;
+            const thigh = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.16, 0.95, 32), mat);
+            thigh.position.set(sign * 0.3, 0.65, 0);
+            const shin = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.13, 0.85, 32), mat);
+            shin.position.set(sign * 0.3, 0.05, 0);
+            const knee = new THREE.Mesh(new THREE.TorusGeometry(0.16, 0.05, 16, 48), accentMat);
+            knee.position.set(sign * 0.3, 0.45, 0);
+            knee.rotation.x = Math.PI/2;
+            const foot = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.12, 0.5), mat);
+            foot.position.set(sign * 0.3, -0.35, 0.2);
+            modelGroup.add(thigh, shin, knee, foot);
+        }
+        else if (data.modelType === "torso") {
+            const core = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.35, 1.1, 32), mat);
+            core.position.set(0, 0.6, 0);
+            const spine = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.9, 0.2), accentMat);
+            spine.position.set(0, 0.6, 0.3);
+            const shoulders = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.15, 0.4), mat);
+            shoulders.position.set(0, 1.05, 0);
+            modelGroup.add(core, spine, shoulders);
+        }
+        else if (data.modelType === "foot") {
+            const rightFoot = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.12, 0.55), mat);
+            rightFoot.position.set(0.35, -0.1, 0.15);
+            const leftFoot = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.12, 0.55), mat);
+            leftFoot.position.set(-0.35, -0.1, 0.15);
+            const ankleR = new THREE.Mesh(new THREE.SphereGeometry(0.1, 16, 16), accentMat);
+            ankleR.position.set(0.35, 0.05, 0.15);
+            const ankleL = new THREE.Mesh(new THREE.SphereGeometry(0.1, 16, 16), accentMat);
+            ankleL.position.set(-0.35, 0.05, 0.15);
+            modelGroup.add(rightFoot, leftFoot, ankleR, ankleL);
+        }
+        
+        scene.add(modelGroup);
+        
+        // Add ground reflection effect
+        const gridHelper = new THREE.GridHelper(4, 20, 0x333333, 0x222222);
+        gridHelper.position.y = -0.6;
+        scene.add(gridHelper);
+        
+        currentScene = scene;
+        currentCamera = camera;
+        currentRenderer = renderer;
+        currentControls = controls;
+        currentModelGroup = modelGroup;
+        
+        function animate() {
+            if (!currentRenderer) return;
+            requestAnimationFrame(animate);
+            if (currentControls) currentControls.update();
+            if (currentRenderer && currentScene && currentCamera) {
+                const container = document.querySelector(".canvas-3d");
+                if (container) {
+                    const width = container.clientWidth;
+                    const height = container.clientHeight;
+                    if (currentRenderer.domElement.width !== width || currentRenderer.domElement.height !== height) {
+                        currentRenderer.setSize(width, height);
+                        currentCamera.aspect = width / height;
+                        currentCamera.updateProjectionMatrix();
+                    }
+                }
+                currentRenderer.render(currentScene, currentCamera);
+            }
+        }
+        
+        animate();
+        
+        // initial resize
+        setTimeout(() => {
+            const container = document.querySelector(".canvas-3d");
+            if (container && currentRenderer) {
+                const width = container.clientWidth;
+                const height = container.clientHeight;
+                currentRenderer.setSize(width, height);
+                currentCamera.aspect = width / height;
+                currentCamera.updateProjectionMatrix();
+            }
+        }, 100);
+    }
+    
+    function applyColorToModel(colorHex) {
+        if (currentModelGroup) {
+            currentModelGroup.traverse(child => {
+                if (child.isMesh && child.material && !child.material.color.getHexString().includes("c61a22")) {
+                    if (Array.isArray(child.material)) child.material.forEach(m => m.color.set(colorHex));
+                    else child.material.color.set(colorHex);
+                }
+            });
+        }
+    }
+
+    // Attach click handlers to SVG zones
+    document.querySelectorAll('.zone').forEach(zone => {
+        zone.addEventListener('click', (e) => {
+            const limb = zone.getAttribute('data-limb');
+            if (limb && prosthesisDB[limb]) {
+                showProsthesisView(limb);
+            }
+        });
+    });
+
+    backBtn.addEventListener('click', showSchematic);
+    
+    orderBtn.addEventListener('click', () => {
+        const data = prosthesisDB[currentLimb];
+        const price = data.prices[currentTier];
+        alert(`CLINICAL QUOTE REQUEST\nProduct: ${data.name} (${currentTier.toUpperCase()})\nFinish: ${currentFinish.label}\nEstimated: ${price.toLocaleString()} EUR\nA medical prescription is required. ASIMOV will contact you within 24h.`);
+    });
+
+    // initial state
+    showSchematic();
+</script>
+</body>
+</html>

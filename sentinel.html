@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>ASIMOV CORPORATION | SENTINEL — Surveillance and Protection Mechanized Entity</title>
+    <link rel="icon" type="image/png" href="https://i.postimg.cc/Qt7rBjzL/official-Asimov-logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --asimov-red: #e31b23;
+            --stark-white: #f5f5f5;
+            --void-black: #050505;
+            --charcoal-raw: #0c0c0c;
+            --industrial-grey: #1e1e1e;
+            --concrete: #2a2a2a;
+            --steel-edge: #3a3a3a;
+            --brutal-shadow: 8px 8px 0px rgba(227, 27, 35, 0.25);
+            --sharp-border: 3px solid var(--asimov-red);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--void-black);
+            color: #cdcdcd;
+            line-height: 1.45;
+            overflow-x: hidden;
+        }
+
+        .brutal-grain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -2;
+            background-image: repeating-linear-gradient(45deg, rgba(227,27,35,0.015) 0px, rgba(227,27,35,0.015) 2px, transparent 2px, transparent 8px);
+        }
+
+        .hard-scan {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.08) 0px, rgba(0,0,0,0.08) 1px, transparent 1px, transparent 4px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 3rem;
+            background: rgba(5, 5, 5, 0.98);
+            border-bottom: var(--sharp-border);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.1s linear;
+        }
+
+        .logo-hyper { display: flex; align-items: center; gap: 1rem; }
+        .logo-img { height: 44px; width: auto; filter: brightness(0) invert(1) drop-shadow(0 0 3px var(--asimov-red)); }
+        .corp-name { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.5px; background: linear-gradient(135deg, #fff 60%, var(--asimov-red) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; text-transform: uppercase; }
+        .back-link { color: var(--asimov-red); text-decoration: none; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1.5px; border: 1px solid var(--asimov-red); padding: 0.5rem 1rem; transition: 0.1s; }
+        .back-link:hover { background: var(--asimov-red); color: black; }
+
+        .hero-product {
+            min-height: 85vh;
+            display: flex;
+            align-items: center;
+            padding: 8rem 3rem 4rem;
+            border-bottom: 1px solid rgba(227,27,35,0.3);
+        }
+        .hero-container { display: flex; flex-wrap: wrap; gap: 3rem; align-items: center; justify-content: space-between; max-width: 1400px; margin: 0 auto; }
+        .hero-visual { flex: 1; min-width: 280px; text-align: center; }
+        .product-image { max-width: 100%; height: auto; filter: drop-shadow(0 0 30px rgba(227,27,35,0.4)); }
+        .hero-info { flex: 1; min-width: 320px; }
+        .badge-priority { display: inline-block; background: var(--asimov-red); color: black; font-weight: 800; font-size: 0.7rem; padding: 0.2rem 0.8rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem; }
+        .hero-info h1 { font-size: 4rem; font-weight: 900; line-height: 1; text-transform: uppercase; color: white; letter-spacing: -2px; margin-bottom: 1rem; }
+        .hero-info h1 span { color: var(--asimov-red); }
+        .sku-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: #6f6f6f; margin-bottom: 1.2rem; border-left: 2px solid var(--asimov-red); padding-left: 0.8rem; }
+        .hero-description { font-size: 1rem; color: #b0b0b0; margin: 1.5rem 0; border-left: 3px solid var(--asimov-red); padding-left: 1.5rem; }
+
+        .spec-highlight-grid { display: flex; gap: 1.5rem; flex-wrap: wrap; margin: 2rem 0; }
+        .spec-highlight { background: #0a0a0a; border-left: 3px solid var(--asimov-red); padding: 0.8rem 1.2rem; }
+        .spec-highlight .value { font-size: 1.6rem; font-weight: 800; color: var(--asimov-red); font-family: 'JetBrains Mono', monospace; }
+        .spec-highlight .label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; }
+
+        .brutal-section { padding: 4rem 3rem; border-top: 1px solid rgba(227,27,35,0.3); }
+        .section-marker { font-size: 1.8rem; font-weight: 800; text-transform: uppercase; margin-bottom: 2rem; display: inline-block; background: linear-gradient(90deg, var(--asimov-red) 0%, rgba(227,27,35,0.3) 80%); -webkit-background-clip: text; background-clip: text; color: transparent; border-left: 5px solid var(--asimov-red); padding-left: 1rem; }
+
+        .specs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+        .spec-card { background: #0a0a0a; border: 1px solid #2a2a2a; padding: 1.5rem; }
+        .spec-card h3 { color: var(--asimov-red); font-size: 1.1rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 1px; }
+        .spec-card ul { list-style: none; }
+        .spec-card li { font-size: 0.85rem; padding-left: 0.8rem; border-left: 2px solid var(--asimov-red); margin-bottom: 0.6rem; }
+
+        .code-block { background: #030303; border: 1px solid #2a2a2a; padding: 1.2rem; margin: 1rem 0; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; overflow-x: auto; white-space: pre-wrap; color: #bcbcbc; border-left: 3px solid var(--asimov-red); }
+
+        .doctrine-box { background: #080808; border: 1px solid var(--asimov-red); padding: 1.5rem; margin: 2rem 0; text-align: center; }
+        .doctrine-box p { font-size: 0.85rem; color: #aaa; }
+
+        footer { background: #030303; border-top: 4px solid var(--asimov-red); padding: 2rem 3rem; }
+        .footer-copyright { text-align: center; font-size: 0.65rem; color: #555; }
+
+        @media (max-width: 900px) {
+            .hero-product { padding: 6rem 1.5rem 2rem; }
+            .hero-info h1 { font-size: 2.5rem; }
+            .brutal-section { padding: 2rem 1.2rem; }
+        }
+        ::-webkit-scrollbar { width: 5px; background: #000; }
+        ::-webkit-scrollbar-thumb { background: var(--asimov-red); }
+    </style>
+</head>
+<body>
+<div class="brutal-grain"></div>
+<div class="hard-scan"></div>
+
+<header>
+    <div class="logo-hyper">
+        <img class="logo-img" src="https://i.postimg.cc/wBJKg2fd/Asimov-logo-transparent.png" alt="ASIMOV">
+        <span class="corp-name">ASIMOV CORPORATION</span>
+    </div>
+    <a href="javascript:history.back()" class="back-link">← RETURN TO ECOSYSTEM</a>
+</header>
+
+<!-- SENTINEL HERO SECTION -->
+<div class="hero-product">
+    <div class="hero-container">
+        <div class="hero-visual">
+            <svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 0 25px rgba(227,27,35,0.5));">
+                <rect x="60" y="80" width="280" height="240" fill="none" stroke="#e31b23" stroke-width="4" rx="8"/>
+                <rect x="100" y="120" width="200" height="160" fill="none" stroke="#e31b23" stroke-width="2" stroke-dasharray="8 4"/>
+                <circle cx="200" cy="200" r="45" fill="none" stroke="#e31b23" stroke-width="3"/>
+                <circle cx="200" cy="200" r="25" fill="none" stroke="#e31b23" stroke-width="2"/>
+                <circle cx="200" cy="200" r="12" fill="#e31b23" opacity="0.8">
+                    <animate attributeName="r" values="12;16;12" dur="2s" repeatCount="indefinite"/>
+                </circle>
+                <line x1="200" y1="320" x2="200" y2="360" stroke="#e31b23" stroke-width="3"/>
+                <line x1="160" y1="360" x2="240" y2="360" stroke="#e31b23" stroke-width="3"/>
+                <rect x="180" y="50" width="40" height="35" fill="none" stroke="#e31b23" stroke-width="2"/>
+                <rect x="188" y="55" width="24" height="24" fill="none" stroke="#e31b23" stroke-width="1.5"/>
+                <path d="M 80 140 L 60 140 M 320 140 L 340 140 M 80 260 L 60 260 M 320 260 L 340 260" stroke="#e31b23" stroke-width="2"/>
+                <text x="195" y="390" font-family="monospace" font-size="10" fill="#e31b23" text-anchor="middle">SENTINEL MK4</text>
+            </svg>
+        </div>
+        <div class="hero-info">
+            <div class="badge-priority">HIGH PRIORITY · STATIONARY PROTECTION UNIT</div>
+            <h1>SENTINEL</h1>
+            <div class="sku-tag">SKU: ASM-SENT-MK4 | CLASSIFICATION: SURVEILLANCE AND PROTECTION MECHANIZED ENTITY</div>
+            <div class="hero-description">
+                Stationary mechanized unit designed for surveillance, deterrence, and protection operations. Primary function: protection of designated hosts or targets through continuous observation and physical presence. Establishes defined perimeter of stability. Operates on principles of passive deterrence. Does not pursue or patrol; occupies and monitors.
+            </div>
+            <div class="spec-highlight-grid">
+                <div class="spec-highlight"><div class="value">360°</div><div class="label">OPTICAL/THERMAL ARRAY</div></div>
+                <div class="spec-highlight"><div class="value">50m</div><div class="label">EFFECTIVE PERIMETER</div></div>
+                <div class="spec-highlight"><div class="value">PASSIVE</div><div class="label">DETERRENCE MODEL</div></div>
+                <div class="spec-highlight"><div class="value">24/7</div><div class="label">CONTINUOUS OPERATION</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- TECHNICAL ARCHITECTURE -->
+<section class="brutal-section">
+    <div class="section-marker">[ SENTINEL CORE ARCHITECTURE ]</div>
+    <div class="specs-grid">
+        <div class="spec-card">
+            <h3>SENSOR SUITE</h3>
+            <ul>
+                <li>4K optical camera array (8x, 360° coverage)</li>
+                <li>Long-wave infrared thermal imaging (640x512, 30Hz)</li>
+                <li>LIDAR perimeter scanner (360°, 100m range)</li>
+                <li>Acoustic array (16x MEMS microphones, 180° sound localization)</li>
+                <li>Multi-spectral threat detection (UV/IR band analysis)</li>
+                <li>Environmental sensors: temperature, humidity, barometric pressure</li>
+            </ul>
+        </div>
+        <div class="spec-card">
+            <h3>COMPUTE & PROCESSING</h3>
+            <ul>
+                <li>Dual redundant processing units (ARMv9 + NPU)</li>
+                <li>Real-time threat classification: 30ms latency</li>
+                <li>Edge AI inference: 25 TOPS dedicated</li>
+                <li>Encrypted local storage: 4TB (30-day rolling buffer)</li>
+                <li>Secure enclave: hardware-accelerated AES-256</li>
+                <li>Firmware OTA updates with cryptographic verification</li>
+            </ul>
+        </div>
+        <div class="spec-card">
+            <h3>PHYSICAL SPECIFICATIONS</h3>
+            <ul>
+                <li>Form factor: fixed pedestal installation</li>
+                <li>Dimensions: 1800mm height x 450mm width x 450mm depth</li>
+                <li>Mass: 185kg</li>
+                <li>Enclosure: Ballistic-grade steel, IP66 rated</li>
+                <li>Operating temperature: -30°C to 55°C</li>
+                <li>Power: 110-240V AC, integrated UPS (4-hour backup)</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- PASSIVE DETERRENCE FRAMEWORK -->
+<section class="brutal-section">
+    <div class="section-marker">[ PASSIVE DETERRENCE · OPERATIONAL DOCTRINE ]</div>
+    <div class="doctrine-box">
+        <p style="font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;">"THE SENTINEL DOES NOT PURSUE. IT DOES NOT PATROL. IT OCCUPIES AND MONITORS. ITS PRESENCE ESTABLISHES A PERIMETER OF STABILITY THROUGH CONTINUOUS OBSERVATION. DETERRENCE IS PASSIVE — THE UNIT DOES NOT ENGAGE, IT PREVENTS BY BEING SEEN."</p>
+    </div>
+    <div class="code-block">
+// SENTINEL OPERATIONAL FIRMWARE // PASSIVE DETERRENCE STATE MACHINE //<br>
+<br>
+enum SentinelState {<br>
+    STATE_IDLE,           // baseline monitoring<br>
+    STATE_ALERT,          // anomaly detected<br>
+    STATE_VERIFY,         // cross-sensor verification<br>
+    STATE_DETERRENT       // active presence amplification<br>
+};<br>
+<br>
+class SentinelCore {<br>
+private:<br>
+    SensorFusion fusion;<br>
+    ThreatClassifier classifier;<br>
+    DeterrenceController deterrence;<br>
+<br>
+public:<br>
+    void executeCycle() {<br>
+        SensorData data = fusion.acquireAll();               // 360° capture<br>
+        ThreatAssessment assessment = classifier.evaluate(data);<br>
+<br>
+        switch(assessment.threat_level) {<br>
+            case ThreatLevel.NONE:<br>
+                state = STATE_IDLE;<br>
+                deterrence.setPassiveMode();                 // standard presence<br>
+                break;<br>
+            case ThreatLevel.SUSPICIOUS:<br>
+                state = STATE_ALERT;<br>
+                deterrence.illuminatePerimeter();             // visual presence intensification<br>
+                break;<br>
+            case ThreatLevel.VERIFIED:<br>
+                state = STATE_DETERRENT;<br>
+                deterrence.activateDeterrenceSequence();      // full passive deterrent array<br>
+                escalateToHost();<br>
+                break;<br>
+        }<br>
+    }<br>
+};<br>
+<br>
+// Threat classification neural network - quantized MobileNetV4 variant<br>
+float* runInference(SensorData data) {<br>
+    tensor input = preprocess(data);                         // (640, 640, 3) normalized<br>
+    tensor output = model.predict(input);                    // 8ms inference on NPU<br>
+    return postprocess(output);                              // confidence scores for 12 threat classes<br>
+}<br>
+    </div>
+</section>
+
+<!-- SURVEILLANCE & MONITORING CAPABILITIES -->
+<section class="brutal-section">
+    <div class="section-marker">[ SURVEILLANCE & PERIMETER MANAGEMENT ]</div>
+    <div class="specs-grid">
+        <div class="spec-card">
+            <h3>OPTICAL SYSTEM DETAILS</h3>
+            <ul>
+                <li>8x 4K sensors (3840x2160) with 120° overlapping FOV</li>
+                <li>Stitched 360° panorama with 0.1° angular resolution</li>
+                <li>Digital zoom: 20x lossless with AI super-resolution</li>
+                <li>Low-light sensitivity: 0.001 lux (starlight mode)</li>
+                <li>WDR: 120dB dynamic range for high-contrast environments</li>
+                <li>Auto-tracking: software-based object following</li>
+            </ul>
+        </div>
+        <div class="spec-card">
+            <h3>THERMAL IMAGING</h3>
+            <ul>
+                <li>640x512 resolution, 12μm pixel pitch</li>
+                <li>Temperature range: -20°C to 150°C</li>
+                <li>Thermal sensitivity: &lt;50mK NETD</li>
+                <li>Human detection range: 150m (body heat signature)</li>
+                <li>Vehicle detection range: 300m</li>
+                <li>Fusion overlay: optical + thermal blended visualization</li>
+            </ul>
+        </div>
+        <div class="spec-card">
+            <h3>LIDAR PERIMETER SCANNING</h3>
+            <ul>
+                <li>360° scanning, 100m range</li>
+                <li>20Hz rotation speed, 0.1° angular resolution</li>
+                <li>Point cloud density: 600,000 points/sec</li>
+                <li>Object classification: pedestrian, vehicle, animal</li>
+                <li>Intrusion detection: sub-10cm movement sensitivity</li>
+                <li>Multi-unit coordination: shared perimeter mapping</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- DEPLOYMENT CONFIGURATIONS -->
+<section class="brutal-section">
+    <div class="section-marker">[ DEPLOYMENT ARCHITECTURES ]</div>
+    <div class="specs-grid">
+        <div class="spec-card">
+            <h3>STANDALONE DEPLOYMENT</h3>
+            <ul>
+                <li>Single-unit perimeter coverage: 360° radius up to 50m</li>
+                <li>Autonomous operation with local threat assessment</li>
+                <li>Host communication via encrypted wireless link</li>
+                <li>Onboard storage for 30-day event log</li>
+            </ul>
+        </div>
+        <div class="spec-card">
+            <h3>MESH NETWORK ARRAY</h3>
+            <ul>
+                <li>Multi-unit coordination (up to 64 Sentinels)</li>
+                <li>Overlapping coverage with handoff tracking</li>
+                <li>Distributed threat intelligence sharing</li>
+                <li>Central command interface for perimeter management</li>
+                <li>Redundant communication (Wi-Fi 6E / Ethernet / LTE)</li>
+            </ul>
+        </div>
+        <div class="spec-card">
+            <h3>INTEGRATION OPTIONS</h3>
+            <ul>
+                <li>ASIMOV Security Hub: centralized management console</li>
+                <li>Third-party VMS integration (ONVIF Profile S/T)</li>
+                <li>API access: RESTful interface for custom automation</li>
+                <li>Alert routing: SMS, email, push notification</li>
+                <li>Export formats: JSON, XML, CSV for audit logging</li>
+            </ul>
+        </div>
+    </div>
+    <div class="code-block">
+// SENTINEL NETWORK PROTOCOL // ENCRYPTED MESH COMMUNICATION //<br>
+<br>
+class SentinelMesh {<br>
+private:<br>
+    vector&lt;SentinelNode&gt; nodes;<br>
+    SecureChannel channel;<br>
+<br>
+public:<br>
+    void broadcastPerimeterAlert(Alert alert) {<br>
+        // Encrypt with shared session key<br>
+        EncryptedPacket packet = channel.encrypt(alert.serialize());<br>
+        // Propagate to all adjacent nodes with flood limit<br>
+        for (auto& node : nodes) {<br>
+            if (node.distance(alert.origin) < RELAY_RADIUS) {<br>
+                node.transmit(packet);<br>
+            }<br>
+        }<br>
+    }<br>
+<br>
+    void synchronizePerimeters() {<br>
+        // Consensus-based perimeter boundary merging<br>
+        PerimeterMap global = PerimeterMap::empty();<br>
+        for (auto& node : nodes) {<br>
+            global.merge(node.localPerimeter());<br>
+        }<br>
+        for (auto& node : nodes) {<br>
+            node.updateGlobalMap(global);<br>
+        }<br>
+    }<br>
+};<br>
+    </div>
+</section>
+
+<!-- SPECIFICATIONS TABLE -->
+<section class="brutal-section">
+    <div class="section-marker">[ COMPLETE TECHNICAL SPECIFICATIONS ]</div>
+    <div class="specs-grid" style="grid-template-columns: 1fr;">
+        <div class="spec-card">
+            <h3>ELECTRICAL & POWER SYSTEMS</h3>
+            <ul>
+                <li>Input voltage: 100-240V AC, 50/60Hz, 3.5A max</li>
+                <li>Power consumption: 180W typical, 250W peak (deterrence active)</li>
+                <li>Internal UPS: Lithium iron phosphate, 4-hour runtime</li>
+                <li>Power redundancy: dual hot-swappable power supplies (optional)</li>
+                <li>Solar-ready: DC input option for remote deployment (48V, 600W)</li>
+            </ul>
+        </div>
+        <div class="spec-card">
+            <h3>ENVIRONMENTAL & CERTIFICATIONS</h3>
+            <ul>
+                <li>Ingress protection: IP66 (dust-tight, high-pressure water jets)</li>
+                <li>Operating temperature: -30°C to 55°C (-22°F to 131°F)</li>
+                <li>Humidity: 0-100% condensing with internal heaters</li>
+                <li>Wind resistance: 160 km/h (100 mph)</li>
+                <li>Certifications: CE, FCC, IC, UL 60950-1, NDAA compliant</li>
+                <li>Compliance: GDPR, CCPA (privacy mode available)</li>
+            </ul>
+        </div>
+        <div class="spec-card">
+            <h3>COMMUNICATIONS</h3>
+            <ul>
+                <li>Ethernet: 2x Gigabit RJ45 (PoE+ capable)</li>
+                <li>Wi-Fi: 6E (802.11ax) tri-band, WPA3 encryption</li>
+                <li>Cellular: 4G/5G (optional module, global bands)</li>
+                <li>Encryption: AES-256-GCM for all network traffic</li>
+                <li>VPN support: IPSec, OpenVPN, WireGuard</li>
+                <li>Protocols: HTTPS, MQTT, RTSP, ONVIF, Modbus TCP</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- MANUFACTURING & QUALITY -->
+<section class="brutal-section">
+    <div class="section-marker">[ MANUFACTURING & QUALITY ASSURANCE ]</div>
+    <div class="specs-grid">
+        <div class="spec-card">
+            <h3>PRODUCTION FACILITIES</h3>
+            <ul>
+                <li>Primary: ASIMOV F-03 (Munich, Germany)</li>
+                <li>Secondary: ASIMOV F-07 (Detroit, USA)</li>
+                <li>Monthly capacity: 2,500 units combined</li>
+                <li>Lead time: 6-8 weeks for standard configuration</li>
+            </ul>
+        </div>
+        <div class="spec-card">
+            <h3>TESTING PROTOCOLS</h3>
+            <ul>
+                <li>Burn-in: 168-hour continuous operation test</li>
+                <li>Environmental: thermal chamber (-30°C to 55°C cycling)</li>
+                <li>Ingress: IP66 water jet and dust exposure</li>
+                <li>Sensor calibration: 0.1° angular accuracy verification</li>
+                <li>MTBF: 75,000 hours (calculated)</li>
+            </ul>
+        </div>
+        <div class="spec-card">
+            <h3>WARRANTY & SUPPORT</h3>
+            <ul>
+                <li>Base warranty: 3 years parts and labor</li>
+                <li>Extended support: 5-year options available</li>
+                <li>On-site service: global field engineering team</li>
+                <li>Firmware updates: 10-year security patch commitment</li>
+            </ul>
+        </div>
+    </div>
+    <div class="code-block">
+// MANUFACTURING TEST SUITE // VALIDATION PROTOCOL //<br>
+<br>
+bool validateSentinel(SentinelUnit unit) {<br>
+    // Sensor alignment verification<br>
+    assert(unit.opticalAlignment() < 0.1);                // degrees<br>
+    assert(unit.lidarCalibration() < 0.05);               // degrees<br>
+    <br>
+    // Thermal imaging validation<br>
+    assert(unit.thermalAccuracy(25.0) < 0.5);             // °C error<br>
+    <br>
+    // Network connectivity stress test<br>
+    assert(unit.packetLossRate() < 0.001);                // 0.1% max<br>
+    <br>
+    // Power system endurance<br>
+    assert(unit.upsRuntime() >= 14400);                   // 4 hours in seconds<br>
+    <br>
+    // Environmental chamber test<br>
+    assert(unit.thermalCycle(-30, 55, 24) == PASS);<br>
+    <br>
+    return true;<br>
+}<br>
+    </div>
+</section>
+
+<footer>
+    <div class="footer-copyright">
+        <p>© 2026 ASIMOV CORPORATION. SENTINEL is a registered trademark of Asimov Industries. Surveillance and Protection Mechanized Entity — Stationary Protection Platform.</p>
+        <p style="margin-top: 0.5rem;">Four Pillars: Presence · Deterrence · Construction · Human Stabilization</p>
+        <p style="margin-top: 0.5rem; font-family: monospace;">"The Sentinel does not pursue. It does not patrol. It occupies and monitors."</p>
+    </div>
+</footer>
+
+<script>
+    const header = document.querySelector('header');
+    window.addEventListener('scroll', () => { header.style.padding = window.scrollY > 40 ? '0.6rem 3rem' : '1rem 3rem'; });
+</script>
+</body>
+</html>

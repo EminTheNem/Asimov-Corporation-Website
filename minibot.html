@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>ASIMOV CORPORATION | MINIBOT — Autonomous Reconnaissance Aerial Drone</title>
+    <link rel="icon" type="image/png" href="https://i.postimg.cc/Qt7rBjzL/official-Asimov-logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --asimov-red: #e31b23;
+            --stark-white: #f5f5f5;
+            --void-black: #050505;
+            --charcoal-raw: #0c0c0c;
+            --industrial-grey: #1e1e1e;
+            --concrete: #2a2a2a;
+            --steel-edge: #3a3a3a;
+            --brutal-shadow: 8px 8px 0px rgba(227, 27, 35, 0.25);
+            --sharp-border: 3px solid var(--asimov-red);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--void-black);
+            color: #cdcdcd;
+            line-height: 1.45;
+            overflow-x: hidden;
+        }
+
+        .brutal-grain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -2;
+            background-image: repeating-linear-gradient(45deg, rgba(227,27,35,0.015) 0px, rgba(227,27,35,0.015) 2px, transparent 2px, transparent 8px);
+        }
+
+        .hard-scan {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.08) 0px, rgba(0,0,0,0.08) 1px, transparent 1px, transparent 4px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 3rem;
+            background: rgba(5, 5, 5, 0.98);
+            border-bottom: var(--sharp-border);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.1s linear;
+        }
+
+        .logo-hyper { display: flex; align-items: center; gap: 1rem; }
+        .logo-img { height: 44px; width: auto; filter: brightness(0) invert(1) drop-shadow(0 0 3px var(--asimov-red)); }
+        .corp-name { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.5px; background: linear-gradient(135deg, #fff 60%, var(--asimov-red) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; text-transform: uppercase; }
+        .back-link { color: var(--asimov-red); text-decoration: none; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1.5px; border: 1px solid var(--asimov-red); padding: 0.5rem 1rem; transition: 0.1s; }
+        .back-link:hover { background: var(--asimov-red); color: black; }
+
+        .hero-product {
+            min-height: 85vh;
+            display: flex;
+            align-items: center;
+            padding: 8rem 3rem 4rem;
+            border-bottom: 1px solid rgba(227,27,35,0.3);
+        }
+        .hero-container { display: flex; flex-wrap: wrap; gap: 3rem; align-items: center; justify-content: space-between; max-width: 1400px; margin: 0 auto; }
+        .hero-visual { flex: 1; min-width: 280px; text-align: center; }
+        .product-svg { max-width: 100%; height: auto; filter: drop-shadow(0 0 25px rgba(227,27,35,0.5)); }
+        .hero-info { flex: 1; min-width: 320px; }
+        .badge-priority { display: inline-block; background: var(--asimov-red); color: black; font-weight: 800; font-size: 0.7rem; padding: 0.2rem 0.8rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem; }
+        .hero-info h1 { font-size: 4rem; font-weight: 900; line-height: 1; text-transform: uppercase; color: white; letter-spacing: -2px; margin-bottom: 1rem; }
+        .hero-info h1 span { color: var(--asimov-red); }
+        .sku-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: #6f6f6f; margin-bottom: 1.2rem; border-left: 2px solid var(--asimov-red); padding-left: 0.8rem; }
+        .hero-description { font-size: 1rem; color: #b0b0b0; margin: 1.5rem 0; border-left: 3px solid var(--asimov-red); padding-left: 1.5rem; }
+
+        .spec-highlight-grid { display: flex; gap: 1.5rem; flex-wrap: wrap; margin: 2rem 0; }
+        .spec-highlight { background: #0a0a0a; border-left: 3px solid var(--asimov-red); padding: 0.8rem 1.2rem; }
+        .spec-highlight .value { font-size: 1.6rem; font-weight: 800; color: var(--asimov-red); font-family: 'JetBrains Mono', monospace; }
+        .spec-highlight .label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; }
+
+        .brutal-section { padding: 4rem 3rem; border-top: 1px solid rgba(227,27,35,0.3); }
+        .section-marker { font-size: 1.8rem; font-weight: 800; text-transform: uppercase; margin-bottom: 2rem; display: inline-block; background: linear-gradient(90deg, var(--asimov-red) 0%, rgba(227,27,35,0.3) 80%); -webkit-background-clip: text; background-clip: text; color: transparent; border-left: 5px solid var(--asimov-red); padding-left: 1rem; }
+
+        .specs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+        .spec-card { background: #0a0a0a; border: 1px solid #2a2a2a; padding: 1.5rem; }
+        .spec-card h3 { color: var(--asimov-red); font-size: 1.1rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 1px; }
+        .spec-card ul { list-style: none; }
+        .spec-card li { font-size: 0.85rem; padding-left: 0.8rem; border-left: 2px solid var(--asimov-red); margin-bottom: 0.6rem; }
+
+        .code-block { background: #030303; border: 1px solid #2a2a2a; padding: 1.2rem; margin: 1rem 0; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; overflow-x: auto; white-space: pre-wrap; color: #bcbcbc; border-left: 3px solid var(--asimov-red); }
+
+        .capability-matrix { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 2rem 0; }
+        .capability-item { background: #080808; border: 1px solid #2a2a2a; padding: 1rem; text-align: center; }
+        .capability-item h4 { color: var(--asimov-red); font-size: 0.9rem; margin-bottom: 0.5rem; }
+
+        footer { background: #030303; border-top: 4px solid var(--asimov-red); padding: 2rem 3rem; }
+        .footer-copyright { text-align: center; font-size: 0.65rem; color: #555; }
+
+        @media (max-width: 900px) {
+            .hero-product { padding: 6rem 1.5rem 2rem; }
+            .hero-info h1 { font-size: 2.5rem; }
+            .brutal-section { padding: 2rem 1.2rem; }
+        }
+        ::-webkit-scrollbar { width: 5px; background: #000; }
+        ::-webkit-scrollbar-thumb { background: var(--asimov-red); }
+    </style>
+</head>
+<body>
+<div class="brutal-grain"></div>
+<div class="hard-scan"></div>
+
+<header>
+    <div class="logo-hyper">
+        <img class="logo-img" src="https://i.postimg.cc/wBJKg2fd/Asimov-logo-transparent.png" alt="ASIMOV">
+        <span class="corp-name">ASIMOV CORPORATION</span>
+    </div>
+    <a href="javascript:history.back()" class="back-link">← RETURN TO ECOSYSTEM</a>
+</header>
+
+<!-- MINIBOT HERO SECTION -->
+<div class="hero-product">
+    <div class="hero-container">
+        <div class="hero-visual">
+            <svg class="product-svg" width="380" height="380" viewBox="0 0 380 380" xmlns="http://www.w3.org/2000/svg">
+                <!-- Spherical drone - 7cm diameter representation -->
+                <circle cx="190" cy="190" r="85" fill="none" stroke="#e31b23" stroke-width="3.5" stroke-dasharray="6 3"/>
+                <circle cx="190" cy="190" r="78" fill="none" stroke="#e31b23" stroke-width="2" stroke-dasharray="3 2"/>
+                
+                <!-- Main sphere body - matte black finish -->
+                <circle cx="190" cy="190" r="70" fill="none" stroke="#e31b23" stroke-width="2.5"/>
+                <circle cx="190" cy="190" r="64" fill="none" stroke="#e31b23" stroke-width="1.5" opacity="0.6"/>
+                
+                <!-- Forward-facing optical sensor (single) -->
+                <circle cx="190" cy="165" r="14" fill="none" stroke="#e31b23" stroke-width="2"/>
+                <circle cx="190" cy="165" r="8" fill="none" stroke="#e31b23" stroke-width="1.5"/>
+                <circle cx="190" cy="165" r="4" fill="#e31b23" opacity="0.9">
+                    <animate attributeName="r" values="3;4.5;3" dur="1.5s" repeatCount="indefinite"/>
+                </circle>
+                
+                <!-- Multi-rotor integrated system - 4 ducts -->
+                <!-- Top rotor duct -->
+                <ellipse cx="190" cy="115" rx="28" ry="18" fill="none" stroke="#e31b23" stroke-width="2"/>
+                <line x1="162" y1="115" x2="218" y2="115" stroke="#e31b23" stroke-width="1.5"/>
+                <line x1="190" y1="97" x2="190" y2="133" stroke="#e31b23" stroke-width="1.5"/>
+                
+                <!-- Bottom rotor duct -->
+                <ellipse cx="190" cy="265" rx="28" ry="18" fill="none" stroke="#e31b23" stroke-width="2"/>
+                <line x1="162" y1="265" x2="218" y2="265" stroke="#e31b23" stroke-width="1.5"/>
+                <line x1="190" y1="247" x2="190" y2="283" stroke="#e31b23" stroke-width="1.5"/>
+                
+                <!-- Left rotor duct -->
+                <ellipse cx="115" cy="190" rx="18" ry="28" fill="none" stroke="#e31b23" stroke-width="2"/>
+                <line x1="115" y1="162" x2="115" y2="218" stroke="#e31b23" stroke-width="1.5"/>
+                <line x1="97" y1="190" x2="133" y2="190" stroke="#e31b23" stroke-width="1.5"/>
+                
+                <!-- Right rotor duct -->
+                <ellipse cx="265" cy="190" rx="18" ry="28" fill="none" stroke="#e31b23" stroke-width="2"/>
+                <line x1="265" y1="162" x2="265" y2="218" stroke="#e31b23" stroke-width="1.5"/>
+                <line x1="247" y1="190" x2="283" y2="190" stroke="#e31b23" stroke-width="1.5"/>
+                
+                <!-- Matte black surface texture indicators -->
+                <circle cx="190" cy="190" r="52" fill="none" stroke="#e31b23" stroke-width="1" stroke-dasharray="2 3" opacity="0.4"/>
+                
+                <!-- Scale indicator -->
+                <text x="190" y="320" font-family="monospace" font-size="9" fill="#e31b23" text-anchor="middle">7cm DIAMETER · MATTE BLACK</text>
+                <text x="190" y="335" font-family="monospace" font-size="8" fill="#8a8a8a" text-anchor="middle">MINIBOT SPHERICAL AERIAL UNIT</text>
+            </svg>
+        </div>
+        <div class="hero-info">
+            <div class="badge-priority">HIGH PRIORITY · MASS PRODUCTION OPTIMIZED</div>
+            <h1>MINI<span>BOT</span></h1>
+            <div class="sku-tag">SKU: ASM-MINI-SPHR | CLASSIFICATION: AUTONOMOUS RECONNAISSANCE AERIAL DRONE</div>
+            <div class="hero-description">
+                Spherical autonomous aerial unit measuring approximately 7 centimeters in diameter. Finished in matte black with single forward-facing optical sensor. Designed for reconnaissance, surveillance, and environmental observation. Propulsion provided by integrated multi-rotor system. Operates with minimal embedded artificial intelligence. Optimized for mass production and distributed deployment.
+            </div>
+            <div class="spec-highlight-grid">
+                <div class="spec-highlight"><div class="value">7cm</div><div class="label">DIAMETER</div></div>
+                <div class="spec-highlight"><div class="value">45min</div><div class="label">FLIGHT TIME</div></div>
+                <div class="spec-highlight"><div class="value">2km</div><div class="label">OPERATIONAL RANGE</div></div>
+                <div class="spec-highlight"><div class="value">MESH</div><div class="label">SWARM READY</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- TECHNICAL ARCHITECTURE -->
+<section class="brutal-section">
+    <div class="section-marker">[ SPHERICAL AERIAL ARCHITECTURE ]</div>
+    <div class="specs-grid">
+        <div class="spec-card">
+            <h3>FORM FACTOR & STRUCTURE</h3>
+            <ul>
+                <li>Diameter: 68mm ±0.5mm (7cm nominal)</li>
+                <li>Mass: 42g (including battery)</li>
+                <li>Chassis: Polycarbonate composite shell, matte black finish</li>
+                <li>Protection: Impact-resistant outer layer, 2m drop survival</li>
+                <li>Ingress protection: IP44 (weather-resistant)</li>
+                <li>Acoustic signature: &lt;45dB at 3m (near silent operation)</li>
+            </ul>
+        </div>
+        <div class="spec-card">
+            <h3>PROPULSION SYSTEM</h3>
+            <ul>
+                <li>Configuration: 4x ducted micro-rotors (integrated)</li>
+                <li>Rotor diameter: 32mm per unit</li>
+                <li>Maximum thrust: 28g per rotor (112g total)</li>
+                <li>Thrust-to-weight ratio: 2.7:1</li>
+                <li>Motor type: Coreless DC brushless, 35,000 RPM max</li>
+                <li>Duct design: Integrated protective shroud, no exposed blades</li>
+            </ul>
+        </div>
+        <div class="spec-card">
+            <h3>OPTICAL SYSTEM</h3>
+            <ul>
+                <li>Sensor: Single forward-facing 8MP CMOS global shutter</li>
+                <li>Resolution: 3840x2160 (4K) video, 12MP still</li>
+                <li>Field of view: 110° diagonal</li>
+                <li>Low-light sensitivity: 0.5 lux (color), 0.05 lux (monochrome)</li>
+                <li>Frame rate: 30fps at 4K, 60fps at 1080p</li>
+                <li>Encoding: H.265 hardware compression</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- AUTONOMY & CONTROL SYSTEMS -->
+<section class="brutal-section">
+    <div class="section-marker">[ MINIMAL AI · DISTRIBUTED INTELLIGENCE ]</div>
+    <div class="code-block">
+// MINIBOT FIRMWARE // MINIMAL EMBEDDED AI // OPTIMIZED FOR MASS DEPLOYMENT //<br>
+<br>
+class MiniBotCore {<br>
+private:<br>
+    // Minimal state machine - no complex planning<br>
+    enum State { IDLE, PATROL, FOLLOW, RETURN };<br>
+    State current_state;<br>
+    <br>
+    // Simple obstacle avoidance - 8 ultrasonic sensors<br>
+    float distance_sensors[8];  // 45° increments<br>
+    <br>
+    // Basic navigation - no SLAM, simple waypoint following<br>
+    Vector3f target_position;<br>
+    Vector3f current_position;<br>
+    <br>
+public:<br>
+    void update() {<br>
+        // Read sensors<br>
+        readDistanceSensors();<br>
+        Vector3f optical_flow = readOpticalFlow();<br>
+        <br>
+        // Simple obstacle avoidance<br>
+        Vector3f avoidance = Vector3f(0,0,0);<br>
+        for (int i = 0; i < 8; i++) {<br>
+            if (distance_sensors[i] &lt; COLLISION_THRESHOLD) {<br>
+                avoidance += -directionVector(i) * (1.0 / distance_sensors[i]);<br>
+            }<br>
+        }<br>
+        <br>
+        // Waypoint following with avoidance<br>
+        Vector3f desired_velocity = (target_position - current_position).normalized() * SPEED;<br>
+        Vector3f final_velocity = desired_velocity + avoidance;<br>
+        <br>
+        // Motor mixing<br>
+        setMotorSpeeds(computeMotorMix(final_velocity));<br>
+    }<br>
+    <br>
+    // Swarm coordination - minimal broadcast protocol<br>
+    void broadcastPosition() {<br>
+        // Simple mesh broadcast every 100ms<br>
+        radio.send(MSG_POSITION, current_position);<br>
+    }<br>
+};<br>
+<br>
+// Optical flow sensor processing - 200Hz update<br>
+Vector3f computeOpticalFlow() {<br>
+    static cv::Mat prev_frame;<br>
+    cv::Mat current_frame = captureImage();<br>
+    <br>
+    // Lucas-Kanade optical flow on downsampled 160x120 image<br>
+    vector&lt;Point2f&gt; prev_points = detectFeatures(prev_frame);<br>
+    vector&lt;Point2f&gt; curr_points = trackFeatures(current_frame, prev_points);<br>
+    <br>
+    Vector3f velocity = solvePnP(prev_points, curr_points);<br>
+    prev_frame = current_frame;<br>
+    return velocity;<br>
+}<br>
+    </div>
+</section>
+
+<!-- RECONNAISSANCE & SURVEILLANCE CAPABILITIES -->
+<section class="brutal-section">
+    <div class="section-marker">[ RECONNAISSANCE & SURVEILLANCE ]</div>
+    <div class="capability-matrix">
+        <div class="capability-item"><h4>ENVIRONMENTAL SURVEILLANCE</h4><p>Real-time video feed, thermal mapping, perimeter monitoring</p></div>
+        <div class="capability-item"><h4>OBJECT DETECTION</h4><p>Basic CNN-based person/vehicle detection (onboard)</p></div>
+        <div class="capability-item"><h4>COORDINATED SWARM</h4><p>Multi-unit distributed area coverage</p></div>
+        <div class="capability-item"><h4>AUTOMATED PATROL</h4><p>Waypoint-based patrol routes, return-to-base on low battery</p></div>
+    </div>
+    <div class="specs-grid">
+        <div class="spec-card">
+            <h3>SENSOR SUITE</h3>
+            <ul>
+                <li>8x ultrasonic rangefinders (45° spacing, 4m range)</li>
+                <li>Optical flow sensor for position hold (200Hz)</li>
+                <li>IMU: 6-axis gyro/accelerometer (1000Hz sampling)</li>
+                <li>Barometer: ±0.1m altitude accuracy</li>
+                <li>Magnetometer: 3-axis compass for heading</li>
+                <li>GPS: Multi-constellation (GPS, GLONASS, Galileo)</li>
+            </ul>
+        </div>
+        <div class="spec-card">
+            <h3>ONBOARD PROCESSING</h3>
+            <ul>
+                <li>MCU: ARM Cortex-M7 (600MHz)</li>
+                <li>Memory: 2MB SRAM, 32MB flash</li>
+                <li>AI accelerator: 0.5 TOPS (basic CNN inference)</li>
+                <li>Image processing: Hardware JPEG encoder</li>
+                <li>Power management: Integrated PMIC with 6 regulated rails</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- SWARM DEPLOYMENT & MESH NETWORKING -->
+<section class="brutal-section">
+    <div class="section-marker">[ DISTRIBUTED DEPLOYMENT · SWARM ARCHITECTURE ]</div>
+    <div class="code-block">
+// MINIBOT SWARM PROTOCOL // MESH NETWORKING // MASS DEPLOYMENT //<br>
+<br>
+class MiniBotSwarm {<br>
+private:<br>
+    static const int MAX_UNITS = 256;<br>
+    uint8_t unit_id;<br>
+    uint8_t swarm_channel;<br>
+    <br>
+    struct Neighbor {<br>
+        uint8_t id;<br>
+        Vector3f position;<br>
+        uint32_t last_seen;<br>
+        float signal_strength;<br>
+    };<br>
+    vector&lt;Neighbor&gt; neighbors;<br>
+    <br>
+public:<br>
+    void initSwarm(uint8_t channel, uint8_t id) {<br>
+        swarm_channel = channel;<br>
+        unit_id = id;<br>
+        radio.setChannel(channel);<br>
+        radio.setPower(10); // 10mW for short-range coordination<br>
+    }<br>
+    <br>
+    void updateNeighbors() {<br>
+        // Listen for beacons from other units<br>
+        while (radio.available()) {<br>
+            SwarmBeacon beacon = radio.read();<br>
+            updateNeighbor(beacon.id, beacon.position, beacon.rssi);<br>
+        }<br>
+        <br>
+        // Broadcast own position every 200ms<br>
+        SwarmBeacon my_beacon = {unit_id, current_position, getBatteryLevel()};<br>
+        radio.broadcast(my_beacon);<br>
+    }<br>
+    <br>
+    void coordinateSearch(Area search_area) {<br>
+        // Distributed area partitioning based on unit count<br>
+        int unit_count = neighbors.size() + 1;<br>
+        Area my_area = partitionArea(search_area, unit_id, unit_count);<br>
+        executeGridSearch(my_area);<br>
+        <br>
+        // Periodic area handoff for coverage<br>
+        if (searchComplete(my_area) && !searchComplete(search_area)) {<br>
+            requestReassignment();<br>
+        }<br>
+    }<br>
+};<br>
+<br>
+// Mass production calibration - automated test rig<br>
+void factoryCalibrate(MiniBot unit) {<br>
+    // Gyro bias calibration (static)<br>
+    unit.calibrateGyro(1000);<br>
+    <br>
+    // Motor thrust matching<br>
+    for (int motor = 0; motor < 4; motor++) {<br>
+        unit.measureThrust(motor);<br>
+        unit.adjustPWM(motor);<br>
+    }<br>
+    <br>
+    // Optical flow alignment<br>
+    unit.calibrateOpticalFlow();<br>
+    <br>
+    // 5-minute flight test<br>
+    unit.hoverTest(300);<br>
+    <br>
+    // Final verification<br>
+    assert(unit.positionHold() &lt; 0.1);  // within 10cm<br>
+    assert(unit.batteryLife() >= 2400); // 40+ minutes<br>
+}<br>
+    </div>
+</section>
+
+<!-- TECHNICAL SPECIFICATIONS -->
+<section class="brutal-section">
+    <div class="section-marker">[ COMPLETE TECHNICAL SPECIFICATIONS ]</div>
+    <div class="specs-grid" style="grid-template-columns: 1fr;">
+        <div class="spec-card">
+            <h3>POWER & ENERGY SYSTEMS</h3>
+            <ul>
+                <li>Battery: 1S LiPo, 500mAh, 3.7V nominal</li>
+                <li>Energy capacity: 1.85Wh</li>
+                <li>Flight time: 42-48 minutes (depending on conditions)</li>
+                <li>Charging: USB-C, 30-minute fast charge (2C)</li>
+                <li>Power management: Automatic low-battery return-to-home</li>
+                <li>Energy efficiency: 22mW per gram of thrust</li>
+            </ul>
+        </div>
+        <div class="spec-card">
+            <h3>RADIO & COMMUNICATIONS</h3>
+            <ul>
+                <li>Frequency: 2.4GHz ISM band, 8 channels</li>
+                <li>Protocol: Custom lightweight mesh protocol</li>
+                <li>Range: 2km line-of-sight (1km urban)</li>
+                <li>Data rate: 2Mbps (video/telemetry)</li>
+                <li>Encryption: AES-128 (optional for secure deployments)</li>
+                <li>Telemetry: 100Hz position, battery, sensor status</li>
+            </ul>
+        </div>
+        <div class="spec-card">
+            <h3>ENVIRONMENTAL & DEPLOYMENT</h3>
+            <ul>
+                <li>Operating temperature: -10°C to 45°C</li>
+                <li>Wind resistance: 8m/s (18mph) maximum</li>
+                <li>Operating altitude: 4000m MSL maximum</li>
+                <li>Storage: Individual charging/transport cases (20-unit capacity)</li>
+                <li>Deployment: Hand-launch, automated landing pad optional</li>
+                <li>Fleet management: Base station for 256-unit coordination</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- MANUFACTURING & MASS PRODUCTION -->
+<section class="brutal-section">
+    <div class="section-marker">[ MASS PRODUCTION · DISTRIBUTED DEPLOYMENT ]</div>
+    <div class="specs-grid">
+        <div class="spec-card">
+            <h3>PRODUCTION FACILITIES</h3>
+            <ul>
+                <li>Primary: ASIMOV F-05 (Shanghai, China)</li>
+                <li>Secondary: ASIMOV F-03 (Munich, Germany)</li>
+                <li>Monthly capacity: 250,000 units</li>
+                <li>Cycle time: 22 seconds per unit (automated assembly)</li>
+                <li>Cost optimization: Designed for high-volume manufacturing</li>
+            </ul>
+        </div>
+        <div class="spec-card">
+            <h3>DEPLOYMENT PACKAGING</h3>
+            <ul>
+                <li>Single unit: Retail packaging (70x70x70mm)</li>
+                <li>Multi-pack: 10-unit tactical case (military-grade foam)</li>
+                <li>Swarm kit: 100-unit deployment system with charging hub</li>
+                <li>Base station: USB-C hub for 8-unit simultaneous charging</li>
+            </ul>
+        </div>
+        <div class="spec-card">
+            <h3>QUALITY CONTROL</h3>
+            <ul>
+                <li>100% flight test before packaging</li>
+                <li>Calibration verification: 0.1° gyro accuracy</li>
+                <li>Battery cycle test: 500 cycles minimum</li>
+                <li>Failure rate: &lt;0.5% after burn-in</li>
+                <li>MTBF: 2,500 flight hours calculated</li>
+            </ul>
+        </div>
+    </div>
+    <div class="code-block">
+// MASS PRODUCTION LINE SPECIFICATION //<br>
+<br>
+// Production line capacity: 250,000 units/month<br>
+// Line speed: 4,200 units/hour (automated)<br>
+// Assembly stations: 32 (fully robotic)<br>
+// Calibration: 8 parallel test rigs<br>
+// Packaging: 12 automated packing cells<br>
+<br>
+// Bill of Materials: 68 unique components<br>
+// - 4x micro-rotor assemblies<br>
+// - 1x main PCB (6-layer, rigid-flex)<br>
+// - 1x battery assembly<br>
+// - 8x ultrasonic sensors<br>
+// - 1x optical sensor module<br>
+// - 1x polycarbonate shell (injection molded)<br>
+<br>
+// Manufacturing cost per unit (target): $28.50 USD<br>
+// Market positioning: Consumer / Industrial / Government<br>
+// Deployment models: Direct purchase, fleet licensing, OEM integration<br>
+    </div>
+</section>
+
+<!-- DEPLOYMENT USE CASES -->
+<section class="brutal-section">
+    <div class="section-marker">[ DEPLOYMENT ARCHITECTURES ]</div>
+    <div class="specs-grid">
+        <div class="spec-card">
+            <h3>SECURITY & SURVEILLANCE</h3>
+            <ul>
+                <li>Perimeter patrol with automated anomaly detection</li>
+                <li>Rapid deployment from charging stations</li>
+                <li>Integration with Sentinel units for coordinated coverage</li>
+                <li>Event-based recording with cloud offload</li>
+            </ul>
+        </div>
+        <div class="spec-card">
+            <h3>INDUSTRIAL INSPECTION</h3>
+            <ul>
+                <li>Confined space entry (tanks, ducts, pipelines)</li>
+                <li>Infrastructure condition assessment</li>
+                <li>Thermal anomaly detection (with optional FLIR module)</li>
+                <li>Automated report generation with geotagged imagery</li>
+            </ul>
+        </div>
+        <div class="spec-card">
+            <h3>ENVIRONMENTAL MONITORING</h3>
+            <ul>
+                <li>Air quality sensing (optional sensor payload)</li>
+                <li>Wildlife observation with silent operation</li>
+                <li>Agricultural crop health assessment</li>
+                <li>Disaster response area reconnaissance</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="footer-copyright">
+        <p>© 2026 ASIMOV CORPORATION. MINIBOT is a registered trademark of Asimov Industries. Autonomous Reconnaissance Aerial Drone — Spherical Mass-Produced Platform.</p>
+        <p style="margin-top: 0.5rem;">Four Pillars: Presence · Deterrence · Construction · Human Stabilization</p>
+        <p style="margin-top: 0.5rem; font-family: monospace;">7cm diameter · Matte black · Optimized for mass production and distributed deployment</p>
+    </div>
+</footer>
+
+<script>
+    const header = document.querySelector('header');
+    window.addEventListener('scroll', () => { header.style.padding = window.scrollY > 40 ? '0.6rem 3rem' : '1rem 3rem'; });
+</script>
+</body>
+</html>
